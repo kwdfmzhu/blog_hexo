@@ -61,58 +61,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-如何用C写python库" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/06/03/如何用C写python库/" class="article-date">
-  <time datetime="2017-06-03T08:52:18.000Z" itemprop="datePublished">2017-06-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/03/如何用C写python库/">如何用C写python库</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>还是比较简单的，这次就权当入个门吧</p>
-<ol>
-<li><p>写好一个C函数</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;python2.7/Python.h&gt; //默认python版本就是#include&lt;Python.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> PyObject *<span class="title">hellozkw</span><span class="params">(PyObject *self, PyObject *args)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> num;</div><div class="line">    <span class="comment">//解析参数</span></div><div class="line">    <span class="keyword">if</span> (!PyArg_ParseTuple(args, <span class="string">"i"</span>, &amp;num)) &#123;</div><div class="line">        <span class="keyword">return</span> Py_BuildValue(<span class="string">"i"</span>, <span class="number">-1</span>);</div><div class="line">    &#125;   </div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"hello zkw %d\n"</span>, num);                                                                                                                                                   </div><div class="line">    <span class="keyword">return</span> Py_BuildValue(<span class="string">"i"</span>, <span class="literal">NULL</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">static</span> PyMethodDef HMethods[] = &#123; </div><div class="line">    <span class="comment">//方法名，导出函数，参数传递方式，方法描述。</span></div><div class="line">    &#123;<span class="string">"hellozkw"</span>, hellozkw, METH_VARARGS, <span class="string">"hahahaha.... from zkw's hello"</span>&#125;,</div><div class="line">    &#123;<span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">inithello</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    (<span class="keyword">void</span>) Py_InitModule(<span class="string">"hello"</span>, HMethods);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>准备一个setup文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> distutils.core <span class="keyword">import</span> setup, Extension</div><div class="line"></div><div class="line">module = Extension(<span class="string">'hello'</span>, sources = [<span class="string">'hello.c'</span>])</div><div class="line">                                                                                                                                                                                     </div><div class="line">setup(name = <span class="string">'hello test'</span>, version = <span class="string">'1.0'</span>, ext_modules = [module])</div></pre></td></tr></table></figure>
-</li>
-<li><p>Makefile文件</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="section">publish:</span></div><div class="line">    python setup.py build</div><div class="line">    python setup.py install</div></pre></td></tr></table></figure>
-</li>
-<li><p>运行make publush</p>
-</li>
-<li>运行即可<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> hello</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>ret = hello.hellozkw(<span class="number">123</span>)</div><div class="line">hello zkw <span class="number">123</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>ret</div><div class="line"><span class="number">0</span></div></pre></td></tr></table></figure>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/03/如何用C写python库/" data-id="cj3h2bihc0004i43rfoyvnx01" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-pelican_blog" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/06/03/pelican_blog/" class="article-date">
@@ -189,7 +137,59 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/06/03/pelican_blog/" data-id="cj3h2bihj0005i43rdu9zhn5n" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/06/03/pelican_blog/" data-id="cj3h2f25x0003j13rlpoweo4z" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-如何用C写python库" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/03/如何用C写python库/" class="article-date">
+  <time datetime="2017-06-03T08:52:18.000Z" itemprop="datePublished">2017-06-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/03/如何用C写python库/">如何用C写python库</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>还是比较简单的，这次就权当入个门吧</p>
+<ol>
+<li><p>写好一个C函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;python2.7/Python.h&gt; //默认python版本就是#include&lt;Python.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> PyObject *<span class="title">hellozkw</span><span class="params">(PyObject *self, PyObject *args)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> num;</div><div class="line">    <span class="comment">//解析参数</span></div><div class="line">    <span class="keyword">if</span> (!PyArg_ParseTuple(args, <span class="string">"i"</span>, &amp;num)) &#123;</div><div class="line">        <span class="keyword">return</span> Py_BuildValue(<span class="string">"i"</span>, <span class="number">-1</span>);</div><div class="line">    &#125;   </div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"hello zkw %d\n"</span>, num);                                                                                                                                                   </div><div class="line">    <span class="keyword">return</span> Py_BuildValue(<span class="string">"i"</span>, <span class="literal">NULL</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">static</span> PyMethodDef HMethods[] = &#123; </div><div class="line">    <span class="comment">//方法名，导出函数，参数传递方式，方法描述。</span></div><div class="line">    &#123;<span class="string">"hellozkw"</span>, hellozkw, METH_VARARGS, <span class="string">"hahahaha.... from zkw's hello"</span>&#125;,</div><div class="line">    &#123;<span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">inithello</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    (<span class="keyword">void</span>) Py_InitModule(<span class="string">"hello"</span>, HMethods);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>准备一个setup文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> distutils.core <span class="keyword">import</span> setup, Extension</div><div class="line"></div><div class="line">module = Extension(<span class="string">'hello'</span>, sources = [<span class="string">'hello.c'</span>])</div><div class="line">                                                                                                                                                                                     </div><div class="line">setup(name = <span class="string">'hello test'</span>, version = <span class="string">'1.0'</span>, ext_modules = [module])</div></pre></td></tr></table></figure>
+</li>
+<li><p>Makefile文件</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="section">publish:</span></div><div class="line">    python setup.py build</div><div class="line">    python setup.py install</div></pre></td></tr></table></figure>
+</li>
+<li><p>运行make publush</p>
+</li>
+<li>运行即可<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> hello</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>ret = hello.hellozkw(<span class="number">123</span>)</div><div class="line">hello zkw <span class="number">123</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>ret</div><div class="line"><span class="number">0</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/06/03/如何用C写python库/" data-id="cj3h2f2610005j13r00svfzfi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -241,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/05/13/Mybatis 动态传入表名进行sql查询/" data-id="cj3h2bih60002i43rc8fl8b3i" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2017/05/13/Mybatis 动态传入表名进行sql查询/" data-id="cj3h2f25s0001j13ri6aucyjm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -308,7 +308,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/07/03/Java_native/" data-id="cj3h2bih00000i43rk0meu9h6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/07/03/Java_native/" data-id="cj3h2f25m0000j13rq4a2s1zd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -353,7 +353,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/15/hangzhouweizhang/" data-id="cj3h2biha0003i43r8ncy8ijq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/15/hangzhouweizhang/" data-id="cj3h2f25v0002j13rhit7zh8k" class="article-share-link">Share</a>
       
       
     </footer>
@@ -429,7 +429,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/29/protobuf_stu/" data-id="cj3h2bihl0006i43rn9j1tles" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/29/protobuf_stu/" data-id="cj3h2f25z0004j13r82k7ia1q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -469,11 +469,11 @@
       <ul>
         
           <li>
-            <a href="/2017/06/03/如何用C写python库/">如何用C写python库</a>
+            <a href="/2017/06/03/pelican_blog/">使用pelican和github搭建个人blog</a>
           </li>
         
           <li>
-            <a href="/2017/06/03/pelican_blog/">使用pelican和github搭建个人blog</a>
+            <a href="/2017/06/03/如何用C写python库/">如何用C写python库</a>
           </li>
         
           <li>
