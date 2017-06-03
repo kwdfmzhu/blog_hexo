@@ -70,12 +70,11 @@ pagination_dir: page
 #theme: landscape
 theme: next
 
-
 #Feed Atom
 feed:
     type: atom
     path: atom.xml
-    limit: 20
+    limit: 5
 
 #sitemap
 #sitemap:

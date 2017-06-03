@@ -1,4 +1,4 @@
-.PHONY: gitpush clean generate server deploy
+.PHONY: deploy gitpush
 
 generate: clean
 	hexo generate
