@@ -1,0 +1,746 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="blog,pelican,python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="kwdfmzhu's blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前几日浏览网页时无意中看到Pelican，于是心血来潮想要搭建个人博客玩玩。联想到github已经提供个人域名，一切都顺利成章。简单写点用做留念 1.搭建环境准备本人属于重度Linux患者，环境为Ubuntu 14.04LTS，其他环境应该类似 2.涉及相关技术 Python2.7 及其相关 Pelican Github Markdown And so on …2.1. Pelican Pelic">
+<meta name="keywords" content="blog,pelican,python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用pelican和github搭建个人blog">
+<meta property="og:url" content="http://yoursite.com/2016/04/13/pelican_blog/index.html">
+<meta property="og:site_name" content="kwdfmzhu&#39;s blog">
+<meta property="og:description" content="前几日浏览网页时无意中看到Pelican，于是心血来潮想要搭建个人博客玩玩。联想到github已经提供个人域名，一切都顺利成章。简单写点用做留念 1.搭建环境准备本人属于重度Linux患者，环境为Ubuntu 14.04LTS，其他环境应该类似 2.涉及相关技术 Python2.7 及其相关 Pelican Github Markdown And so on …2.1. Pelican Pelic">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/73e6e6e1gw1f1rj38tgbnj20po08yq3s.jpg">
+<meta property="og:updated_time" content="2017-06-03T11:54:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用pelican和github搭建个人blog">
+<meta name="twitter:description" content="前几日浏览网页时无意中看到Pelican，于是心血来潮想要搭建个人博客玩玩。联想到github已经提供个人域名，一切都顺利成章。简单写点用做留念 1.搭建环境准备本人属于重度Linux患者，环境为Ubuntu 14.04LTS，其他环境应该类似 2.涉及相关技术 Python2.7 及其相关 Pelican Github Markdown And so on …2.1. Pelican Pelic">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/73e6e6e1gw1f1rj38tgbnj20po08yq3s.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/04/13/pelican_blog/"/>
+
+
+
+
+
+  <title>使用pelican和github搭建个人blog | kwdfmzhu's blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cN">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">kwdfmzhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一江春水一江涛</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/13/pelican_blog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kwdfmzhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kwdfmzhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用pelican和github搭建个人blog</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-13T16:52:18+08:00">
+                2016-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前几日浏览网页时无意中看到Pelican，于是心血来潮想要搭建个人博客玩玩。联想到github已经提供个人域名，一切都顺利成章。简单写点用做留念</p>
+<h3 id="1-搭建环境准备"><a href="#1-搭建环境准备" class="headerlink" title="1.搭建环境准备"></a>1.搭建环境准备</h3><p>本人属于重度Linux患者，环境为Ubuntu 14.04LTS，其他环境应该类似</p>
+<h3 id="2-涉及相关技术"><a href="#2-涉及相关技术" class="headerlink" title="2.涉及相关技术"></a>2.涉及相关技术</h3><ul>
+<li>Python2.7 及其相关</li>
+<li>Pelican</li>
+<li>Github</li>
+<li>Markdown</li>
+<li>And so on …<h4 id="2-1-Pelican"><a href="#2-1-Pelican" class="headerlink" title="2.1. Pelican"></a>2.1. Pelican</h4></li>
+<li>Pelican是一个用Python语言编写的静态网站生成器，支持使用restructuredText和Markdown写文章，配置灵活，扩展性强。同时有很多主题可以使用。</li>
+<li>Pelican的github地址:  <a href="https://github.com/getpelican/pelican" target="_blank" rel="external">https://github.com/getpelican/pelican</a></li>
+<li>Pelican 主题的github地址:  <a href="https://github.com/getpelican/pelican-themes" target="_blank" rel="external">https://github.com/getpelican/pelican-themes</a></li>
+</ul>
+<h3 id="3-使用Pelican-搭建个人静态博客"><a href="#3-使用Pelican-搭建个人静态博客" class="headerlink" title="3. 使用Pelican 搭建个人静态博客"></a>3. 使用Pelican 搭建个人静态博客</h3><h4 id="3-1-安装pelican"><a href="#3-1-安装pelican" class="headerlink" title="3.1. 安装pelican"></a>3.1. 安装pelican</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">aptitude install python-pelican</div></pre></td></tr></table></figure>
+<p>python2.7 以及相关其他依赖不做介绍</p>
+<h4 id="3-2-开始搭建"><a href="#3-2-开始搭建" class="headerlink" title="3.2. 开始搭建"></a>3.2. 开始搭建</h4><p>输入如下命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mkdir blog</div><div class="line"><span class="built_in">cd</span> blog</div><div class="line">pelican-quickstart</div></pre></td></tr></table></figure></p>
+<p>pelican-quickstart 是pelican 自带命令，根据提示一步步输入相应的配置项，不知道如何设置的接受默认即可，后续可以通过编辑pelicanconf.py文件更改配置</p>
+<p>结束后生成目录如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">blog/</div><div class="line">├── content              <span class="comment"># 存放输入的Markdown文件夹</span></div><div class="line">├── output               <span class="comment"># 生成的输出文件</span></div><div class="line">├── develop_server.sh    <span class="comment"># 开启测试服务器脚本</span></div><div class="line">├── Makefile             <span class="comment"># 管理博客的Makefile</span></div><div class="line">├── pelicanconf.py       <span class="comment"># 主配置文件</span></div><div class="line">└── publishconf.py       <span class="comment"># 主发布文件</span></div></pre></td></tr></table></figure></p>
+<p>####3.3. 写博客内容</p>
+<ul>
+<li>进入到content 目录下，用Markdown 开始编写内容。Markdown语法简单，Google即可</li>
+<li>Markdown 在线编辑器推荐使用<a href="https://maxiang.io/" target="_blank" rel="external">马克飞象</a>，个人使用不错。本地编辑器使用ReText。</li>
+<li>切记在每个文件前四行输入如下<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Title: 文章标题</div><div class="line">Date: 2013-04-18</div><div class="line">Category: 文章类别</div><div class="line">Tag: 标签1, 标签2</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>####3.4. 预览博客<br>输入以下命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">make publish</div><div class="line">make serve</div></pre></td></tr></table></figure></p>
+<p>打开浏览器，输入127.0.0.1:8000 即可看到博客</p>
+<p>####3.5. 选择主题<br><a href="https://github.com/getpelican/pelican-themes" target="_blank" rel="external">pelican-themes</a> 上有很多主题， git clone后可以使用如下命令安装任一主题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pelican-themes -i XXXXXX</div></pre></td></tr></table></figure></p>
+<p>安装完成后在pelicanconf.py文件中修改THEME 容，如安装了pelican-bootstrap3主题，那么修改THEME =”pelican-bootstrap3”，重启即可看到主题修改</p>
+<p>####3.6. 设置favicon.ico<br>favicon.ico 即Favorites Icon的缩写，其可以让浏览器除显示相应的标题外，还以图标的方式区别不同的网站。  </p>
+<ol>
+<li>选择图片，生成.ico文件(可直接使用网站生成如 <a href="http://www.bitbug.net/" target="_blank" rel="external">在线制作ico图标</a>)</li>
+<li>将图片命名成favicon.ico，放置到与Makefile同级目录</li>
+<li>修改Makefile，添加移动favicon.ico功能<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">FAVICONICO=$(BASEDIR)/favicon.ico</div><div class="line"></div><div class="line">publish: clean                                                                                                                                                                                           </div><div class="line">    $(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)</div><div class="line">    cp $(FAVICONICO) $(OUTPUTDIR)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>####3.7. 设置评论系统<br>在<a href="https://disqus.com/admin/signup" target="_blank" rel="external">Disqus</a>上申请一个站点，记牢Shortname。 在pelicanconf.py添加<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DISQUS_SITENAME = Shortname</div></pre></td></tr></table></figure></p>
+<p>设置后可以在每个blog下出现如此评论系统<br><img src="http://ww3.sinaimg.cn/large/73e6e6e1gw1f1rj38tgbnj20po08yq3s.jpg" alt="disqus_comments"></p>
+<p>####3.8. 添加图片图床<br>前两天一直在找一个简单易用的图床，终于找到一个推荐的<a href="https://weibotuchuang.sinaapp.com/" target="_blank" rel="external">围脖是个好图床</a></p>
+<ol>
+<li>进入网站，选择对应的浏览器安装插件(本人安装了Chrome插件)</li>
+<li>安装完成后，打开插件，会出现提示对话框，将图片拖入即可生成对应的图片URL了</li>
+</ol>
+<p>####3.X. 其他功能<br>其他还有很多功能如评论系统，分析系统，站内搜索可以添加，后续会更新</p>
+<h3 id="4-使用github发布博客"><a href="#4-使用github发布博客" class="headerlink" title="4. 使用github发布博客"></a>4. 使用github发布博客</h3><p>原理: Github为每一个用户分配了一个二级域名username.github.io，用户为自己的二级域名创建主页很简单，只需要在Github下创建一个名为username.github.io的版本库，并向其master分支提交网站静态页面即可。</p>
+<ol>
+<li>登陆Github，创建一个名为username.github.io的版本库(必须如此格式)</li>
+<li>将blog/output 下的内容git到username.github.io下</li>
+<li>少等片刻，登陆<a href="http://username.github.io，会发现自己的个人博客已经生成" target="_blank" rel="external">http://username.github.io，会发现自己的个人博客已经生成</a></li>
+</ol>
+<p>如此一来，一个具有Geek风格的个人博客搭建完毕。可以出去装X了…</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blog/" rel="tag"># blog</a>
+          
+            <a href="/tags/pelican/" rel="tag"># pelican</a>
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/15/hangzhouweizhang/" rel="next" title="杭州违章处理吐槽">
+                <i class="fa fa-chevron-left"></i> 杭州违章处理吐槽
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/03/Java_native/" rel="prev" title="Java native关键字">
+                Java native关键字 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="kwdfmzhu" />
+          <p class="site-author-name" itemprop="name">kwdfmzhu</p>
+           
+              <p class="site-description motion-element" itemprop="description">一江春水一江涛</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">Tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-搭建环境准备"><span class="nav-number">1.</span> <span class="nav-text">1.搭建环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-涉及相关技术"><span class="nav-number">2.</span> <span class="nav-text">2.涉及相关技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Pelican"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. Pelican</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-使用Pelican-搭建个人静态博客"><span class="nav-number">3.</span> <span class="nav-text">3. 使用Pelican 搭建个人静态博客</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-安装pelican"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. 安装pelican</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-开始搭建"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. 开始搭建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-使用github发布博客"><span class="nav-number">4.</span> <span class="nav-text">4. 使用github发布博客</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kwdfmzhu</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
