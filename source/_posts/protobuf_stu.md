@@ -1,6 +1,7 @@
 ---
 title: protobuf 的简单介绍
 date: 2016-02-29 16:52:18
+tags: [protobuf]
 ---
 
 ### protobuf 是什么

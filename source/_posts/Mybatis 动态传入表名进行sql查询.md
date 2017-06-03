@@ -1,6 +1,7 @@
 ---
 title: Mybatis 动态传入表名进行sql查询
 date: 2017-05-13 16:52:18
+tags: [java, mybatis]
 ---
 
 网上也有相关的方法，基本都为

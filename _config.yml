@@ -4,10 +4,10 @@
 
 # Site
 title: kwdfmzhu's blog
-subtitle:
-description:
+subtitle: 一江春水一江涛
+description: 一江春水一江涛
 author: kwdfmzhu
-language:
+language: zh-cN
 timezone:
 
 # URL
@@ -62,9 +62,14 @@ pagination_dir: page
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
-Plugins:
-    - hexo-generator-feed
-    - hexo-generator-sitemap
+#Plugins:
+#    - hexo-generator-feed
+#    - hexo-generator-sitemap
+
+## Themes: https://hexo.io/themes/
+#theme: landscape
+theme: next
+
 
 #Feed Atom
 feed:
@@ -73,12 +78,8 @@ feed:
     limit: 20
 
 #sitemap
-sitemap:
-    path: sitemap.xml
-
-
-## Themes: https://hexo.io/themes/
-theme: landscape
+#sitemap:
+#    path: sitemap.xml
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

@@ -1,6 +1,7 @@
 ---
 title: Java native关键字
 date: 2016-07-03 16:52:18
+tags: [java, native]
 ---
 ## 前言
 在Java的Object类中的函数定义如hasCode()函数如下:

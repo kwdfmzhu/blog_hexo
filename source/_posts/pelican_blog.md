@@ -1,6 +1,7 @@
 ---
 title: 使用pelican和github搭建个人blog
-date: 2017-06-03 16:52:18
+date: 2016-04-13 16:52:18
+tags: [blog, pelican, python]
 ---
 
 前几日浏览网页时无意中看到Pelican，于是心血来潮想要搭建个人博客玩玩。联想到github已经提供个人域名，一切都顺利成章。简单写点用做留念
