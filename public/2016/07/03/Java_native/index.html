@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Java native关键字 | kwdfmzhu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言在Java的Object类中的函数定义如hasCode()函数如下:1public native int hasCode(); 看了之后觉得很奇怪，为什么会有native呢?今天稍微来了解一下 什么是nativenative就是本地的意思，Java中native是一个关键字，用来修饰函数定义，表明该函数是由非Java写的。(类似C++调用C的extern C告知编译器去调用一个C函数)  “A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java native关键字">
+<meta property="og:url" content="http://yoursite.com/2016/07/03/Java_native/index.html">
+<meta property="og:site_name" content="kwdfmzhu&#39;s blog">
+<meta property="og:description" content="前言在Java的Object类中的函数定义如hasCode()函数如下:1public native int hasCode(); 看了之后觉得很奇怪，为什么会有native呢?今天稍微来了解一下 什么是nativenative就是本地的意思，Java中native是一个关键字，用来修饰函数定义，表明该函数是由非Java写的。(类似C++调用C的extern C告知编译器去调用一个C函数)  “A">
+<meta property="og:updated_time" content="2017-06-03T09:09:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java native关键字">
+<meta name="twitter:description" content="前言在Java的Object类中的函数定义如hasCode()函数如下:1public native int hasCode(); 看了之后觉得很奇怪，为什么会有native呢?今天稍微来了解一下 什么是nativenative就是本地的意思，Java中native是一个关键字，用来修饰函数定义，表明该函数是由非Java写的。(类似C++调用C的extern C告知编译器去调用一个C函数)  “A">
+  
+    <link rel="alternate" href="/atom.xml" title="kwdfmzhu&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">kwdfmzhu&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Java_native" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/03/Java_native/" class="article-date">
+  <time datetime="2016-07-03T08:52:18.000Z" itemprop="datePublished">2016-07-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java native关键字
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Java的Object类中的函数定义如hasCode()函数如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hasCode</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure></p>
+<p>看了之后觉得很奇怪，为什么会有native呢?今天稍微来了解一下</p>
+<h2 id="什么是native"><a href="#什么是native" class="headerlink" title="什么是native"></a>什么是native</h2><p>native就是本地的意思，Java中native是一个关键字，用来修饰函数定义，表明该函数是由非Java写的。(类似C++调用C的extern C告知编译器去调用一个C函数)</p>
+<blockquote>
+<p>“A native method is a Java method whose implementation is provided by non-java code.”</p>
+</blockquote>
+<p>定义一个native函数时，并不提供实现题(有点类似于Java的Interface定义)，原因就是函数的具体实现是由非Java语言在外面实现的。下面给出一些native函数的定义示例:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IHaveNatives</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Native1</span><span class="params">(<span class="keyword">int</span> x)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">static</span> <span class="keyword">public</span> <span class="keyword">long</span> <span class="title">Native2</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">synchronized</span> <span class="keyword">private</span> <span class="keyword">float</span> <span class="title">Native3</span><span class="params">(Object o)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">void</span> <span class="title">Native4</span><span class="params">(<span class="keyword">int</span>[] ary)</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>很显然，native可以修饰几乎所有类型的函数以及返回所有类型的返回值，当然很明显的一点就是不能修饰abstract类型的函数，原因也很明显:native表示该函数有外部的具体实现，而abstract表示该函数没有具体的实现。这里说明一点，如果带native的函数被继承后可以用java重写(带final的不能被重写)。</p>
+<h2 id="为什么要有native"><a href="#为什么要有native" class="headerlink" title="为什么要有native"></a>为什么要有native</h2><ol>
+<li>与java环境外交互：<br>有时java应用需要与java外面的环境交互。这是本地方法存在的主要原因，你可以想想java需要与一些底层系统如操作系统或某些硬件交换信息时的情况。本地方法正是这样一种交流机制：它为我们提供了一个非常简洁的接口，而且我们无需去了解java应用之外的繁琐的细节。</li>
+<li>与操作系统交互：<br>JVM支持着java语言本身和运行时库，它是java程序赖以生存的平台，它由一个解释器（解释字节码）和一些连接到本地代码的库组成。然而不管怎样，它毕竟不是一个完整的系统，它经常依赖于一些底层（underneath在下面的）系统的支持。这些底层系统常常是强大的操作系统。通过使用本地方法，我们得以用java实现了jre的与底层系统的交互，甚至JVM的一些部分就是用C写的，还有，如果我们要使用一些java语言本身没有提供封装的操作系统的特性时，我们也需要使用本地方法。</li>
+<li>Sun’s Java：<br>Sun的解释器是用C实现的，这使得它能像一些普通的C一样与外部交互。jre大部分是用java实现的，它也通过一些本地方法与外界交互。例如：类java.lang.Thread 的 setPriority()方法是用java实现的，但是它实现调用的是该类里的本地方法setPriority0()。这个本地方法是用C实现的，并被植入JVM内部，在Windows95的平台上，这个本地方法最终将调用Win32 SetPriority() API。这是一个本地方法的具体实现由JVM直接提供，更多的情况是本地方法由外部的动态链接库（external dynamic link library）提供，然后被JVM调用。</li>
+</ol>
+<h2 id="怎么样使用native"><a href="#怎么样使用native" class="headerlink" title="怎么样使用native"></a>怎么样使用native</h2><ol>
+<li><p>首先创建一个native的类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloNative</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span></div><div class="line">    &#123;</div><div class="line">        System.loadLibrary(<span class="string">"HelloNative"</span>);</div><div class="line">    &#125;</div><div class="line">     </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span></span>;</div><div class="line">     </div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"static-access"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">new</span> HelloNative().sayHello();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>运行生成javah，等到头文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">javac HelloNative.java</div><div class="line">javah HelloNative</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>就可以等到如下的HelloNative.h文件<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* DO NOT EDIT THIS FILE - it is machine generated */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></div><div class="line"><span class="comment">/* Header for class HelloNative */</span></div><div class="line"> </div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _Included_HelloNative</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _Included_HelloNative</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * Class:     HelloNative</div><div class="line"> * Method:    sayHello</div><div class="line"> * Signature: ()V</div><div class="line"> */</div><div class="line"><span class="function">JNIEXPORT <span class="keyword">void</span> JNICALL <span class="title">Java_HelloNative_sayHello</span></span></div><div class="line">  <span class="params">(JNIEnv *, jclass)</span>;</div><div class="line"> </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line">&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
+<ol>
+<li><p>根据头文件实现一个本地方法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"HelloNative.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"> </div><div class="line">JNIEXPORT <span class="keyword">void</span> JNICALL Java_HelloNative_sayHello</div><div class="line">&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Hello，JNI"</span>);   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>用GCC生成库文件</p>
+</li>
+<li>运行即可<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">java HelloNative</div><div class="line"></div><div class="line">Hello，JNI</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/03/Java_native/" data-id="cj3h2bih00000i43rk0meu9h6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/13/Mybatis 动态传入表名进行sql查询/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Mybatis 动态传入表名进行sql查询
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/15/hangzhouweizhang/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">杭州违章处理吐槽</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/06/03/如何用C写python库/">如何用C写python库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/03/pelican_blog/">使用pelican和github搭建个人blog</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/13/Mybatis 动态传入表名进行sql查询/">Mybatis 动态传入表名进行sql查询</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/03/Java_native/">Java native关键字</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/15/hangzhouweizhang/">杭州违章处理吐槽</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 kwdfmzhu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

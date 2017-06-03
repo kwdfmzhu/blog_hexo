@@ -1,7 +1,13 @@
-.PHONY: generate server
+.PHONY: clean generate server deploy
 
-generate:
+generate: clean
 	hexo generate
 
 server: generate
 	hexo server
+
+deploy: generate
+	hexo deploy
+
+clean:
+	hexo clean

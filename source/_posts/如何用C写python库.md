@@ -1,4 +1,9 @@
-## 如何用C写python库
+---
+title: 如何用C写python库
+date: 2017-06-03 16:52:18
+---
+	
+还是比较简单的，这次就权当入个门吧
 1.  写好一个C函数
 ```cpp
 #include<stdio.h>
