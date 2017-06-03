@@ -1,4 +1,4 @@
-.PHONY: clean generate server deploy
+.PHONY: gitpush clean generate server deploy
 
 generate: clean
 	hexo generate
@@ -11,3 +11,8 @@ deploy: generate
 
 clean:
 	hexo clean
+
+gitpush: generate
+	git add .
+	git commit -m 'update'
+	git push
