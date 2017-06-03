@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+    
+  <url>
+    <loc>http://yoursite.com/2016/02/29/protobuf_stu/</loc>
+    <lastmod>2017-06-03T11:54:16.000Z</lastmod>
+    <data>
+        <display>
+        <title>protobuf 的简单介绍</title>
+        <pubTime>2016-02-29T08:52:18.000Z</pubTime>
+        
+        <tag>protobuf</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2016/04/13/pelican_blog/</loc>
+    <lastmod>2017-06-03T11:54:04.000Z</lastmod>
+    <data>
+        <display>
+        <title>使用pelican和github搭建个人blog</title>
+        <pubTime>2016-04-13T08:52:18.000Z</pubTime>
+        
+        <tag>blog</tag>
+         
+        <tag>pelican</tag>
+         
+        <tag>python</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/05/13/Mybatis%20%E5%8A%A8%E6%80%81%E4%BC%A0%E5%85%A5%E8%A1%A8%E5%90%8D%E8%BF%9B%E8%A1%8Csql%E6%9F%A5%E8%AF%A2/</loc>
+    <lastmod>2017-06-03T11:53:27.000Z</lastmod>
+    <data>
+        <display>
+        <title>Mybatis 动态传入表名进行sql查询</title>
+        <pubTime>2017-05-13T08:52:18.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>mybatis</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2016/07/03/Java_native/</loc>
+    <lastmod>2017-06-03T11:53:11.000Z</lastmod>
+    <data>
+        <display>
+        <title>Java native关键字</title>
+        <pubTime>2016-07-03T08:52:18.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>native</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2016/03/15/hangzhouweizhang/</loc>
+    <lastmod>2017-06-03T11:52:51.000Z</lastmod>
+    <data>
+        <display>
+        <title>杭州违章处理吐槽</title>
+        <pubTime>2016-03-15T08:52:18.000Z</pubTime>
+        
+        <tag>life</tag>
+         
+        <tag>hangzhou</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/06/03/%E5%A6%82%E4%BD%95%E7%94%A8C%E5%86%99python%E5%BA%93/</loc>
+    <lastmod>2017-06-03T11:51:49.000Z</lastmod>
+    <data>
+        <display>
+        <title>如何用C写python库</title>
+        <pubTime>2017-06-03T08:52:18.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+</urlset>
