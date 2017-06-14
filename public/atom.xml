@@ -218,11 +218,11 @@
     </summary>
     
     
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
       <category term="blog" scheme="http://yoursite.com/tags/blog/"/>
     
       <category term="pelican" scheme="http://yoursite.com/tags/pelican/"/>
-    
-      <category term="python" scheme="http://yoursite.com/tags/python/"/>
     
   </entry>
   
