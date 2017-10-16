@@ -1,0 +1,730 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,django,centos,linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="kwdfmzhu's blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一. 大概情况就是说有一个django服务需要部署到centos的apache上去。但是呢该centos内核版本较低，自带的python版本较低。需要自己编译一个python2.7的版本替换掉系统的。然后就开展了一场与各种配置的艰苦斗争。。。 篇幅短长，大家就当作看一个故事吧。重点的呢会加黑一下，同时也写在结论处的。 二. 斗争过程2.1. 刚拿到这个任务时，我登陆centos找apache服务。">
+<meta name="keywords" content="python,django,centos,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次django部署时遇到的问题总结">
+<meta property="og:url" content="http://yoursite.com/2017/10/16/记一次django部署时遇到的问题总结/index.html">
+<meta property="og:site_name" content="kwdfmzhu&#39;s blog">
+<meta property="og:description" content="一. 大概情况就是说有一个django服务需要部署到centos的apache上去。但是呢该centos内核版本较低，自带的python版本较低。需要自己编译一个python2.7的版本替换掉系统的。然后就开展了一场与各种配置的艰苦斗争。。。 篇幅短长，大家就当作看一个故事吧。重点的呢会加黑一下，同时也写在结论处的。 二. 斗争过程2.1. 刚拿到这个任务时，我登陆centos找apache服务。">
+<meta property="og:updated_time" content="2017-10-16T11:02:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次django部署时遇到的问题总结">
+<meta name="twitter:description" content="一. 大概情况就是说有一个django服务需要部署到centos的apache上去。但是呢该centos内核版本较低，自带的python版本较低。需要自己编译一个python2.7的版本替换掉系统的。然后就开展了一场与各种配置的艰苦斗争。。。 篇幅短长，大家就当作看一个故事吧。重点的呢会加黑一下，同时也写在结论处的。 二. 斗争过程2.1. 刚拿到这个任务时，我登陆centos找apache服务。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/16/记一次django部署时遇到的问题总结/"/>
+
+
+
+
+
+  <title>记一次django部署时遇到的问题总结 | kwdfmzhu's blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cN">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kwdfmzhu"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">kwdfmzhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The World is Full of Shit</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Über
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/16/记一次django部署时遇到的问题总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kwdfmzhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kwdfmzhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">记一次django部署时遇到的问题总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-16T16:52:18+08:00">
+                2017-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/16/记一次django部署时遇到的问题总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/10/16/记一次django部署时遇到的问题总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一. 大概情况<br>就是说有一个django服务需要部署到centos的apache上去。但是呢该centos内核版本较低，自带的python版本较低。需要自己编译一个python2.7的版本替换掉系统的。然后就开展了一场与各种配置的艰苦斗争。。。</p>
+<p>篇幅短长，大家就当作看一个故事吧。重点的呢会加黑一下，同时也写在结论处的。</p>
+<p>二. 斗争过程<br>2.1. 刚拿到这个任务时，我登陆centos找apache服务。但是居然没有找到/etc/apache2(以前接触的机器都是ubuntu和debian, 没有接触过redhat和centos)，我困惑了。。。然后查了一下才知道centos上的httpd就是apache，也就是<strong>/etc/httpd就是我要找的apache目录</strong>。</p>
+<p>2.2. 知道apache目录后，我首先试着跑了一下django，采用本地启动的方式，验证采用wget ${URL}的方式，发现程序是OK的。那么就可以部署到apache上去了。apache中的conf/httpd.conf中已经有了对应的wsgi配置(已有前人的肩膀可以踩了，很happy)，看了一下<strong>WSGIScriptAlias</strong> 配置路径，没有问题。那么我就尝试启动了apache，启动方式为 service httpd restart。但此时查看apache的error_log，现在<strong>提示找不到site.py错误</strong>。</p>
+<p>2.3. 查找相关的资料，我怀疑可能是mod_wsgi版本过低导致的。通过ldd modules/mod_wsgi.so 看到<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"> linux-vdso.so.1 =&gt;  (0x00007ffff3300000)</div><div class="line"> libpython2.6.so.1.0 =&gt; /usr/lib64/libpython2.6.so.1.0 (0x00007f48fb4e6000)</div><div class="line"> libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007f48fb2c9000)</div><div class="line"> libdl.so.2 =&gt; /lib64/libdl.so.2 (0x00007f48fb0c4000)</div><div class="line"> libutil.so.1 =&gt; /lib64/libutil.so.1 (0x00007f48faec1000)</div><div class="line"> libm.so.6 =&gt; /lib64/libm.so.6 (0x00007f48fac3d000)</div><div class="line"> libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f48fa8a8000)</div><div class="line"> /lib64/ld-linux-x86-64.so.2 (0x00007f48fbab9000)</div><div class="line">``` </div><div class="line">其中很明显libpython是2.6版本的，和我自装的2.7版本对不上。此时有两种方式</div><div class="line">  1. 修改link so文件，也就是把/usr/lib64/libpython2.6.so.1.0 做成一个软连接，link到python2.7.so上</div><div class="line">  2. 重现编译mod_wsgi</div><div class="line">考虑到尽量少走歪路，采用比较保险的第2中方案。</div><div class="line"></div><div class="line">2.4. 下载mod_wsgi源码，开始编译。然后就很顺利的报错了，出错如下</div><div class="line">```bash</div><div class="line">/usr/bin/ld: /usr/<span class="built_in">local</span>/lib/libpython2.7.a(abstract.o): relocation R_X86_64_32 against `.rodata.str1.8‘ can not be used when making a shared object; recompile with -fPIC</div><div class="line">/usr/<span class="built_in">local</span>/lib/libpython2.7.a: could not <span class="built_in">read</span> symbols: Bad value</div><div class="line">collect2: ld returned 1 <span class="built_in">exit</span> status</div><div class="line">apxs:Error: Command failed with rc=65536</div></pre></td></tr></table></figure></p>
+<p>提示还是比较明显的，程序在做link libpython2.7.a 的时候找到的是静态库(.a)不是动态库(.so)，当时看到这个错误时感觉崩溃了，这说明需要重新编译python程序啊。。。蹲墙角哭了一会，回来默默的把python删掉，重新下载python源码，<strong>./configure时带上–enable-shared; make; make install。后再编译mod_wsgi</strong> 就可以了。替换掉modules/mod_wsgi.so。</p>
+<p>PS: <em>关于mod_wsgi，有兴趣可以看一下: <a href="http://modwsgi.readthedocs.io/en/develop/" target="_blank" rel="external">http://modwsgi.readthedocs.io/en/develop/</a></em></p>
+<p>2.5. 安装完mod_wsgi，先喝口水缓一缓，因为我相信apache的环境应该是不会有问题了，我只要service httpd restart就ok了。果然，现实给我了一记响亮的耳光，error_log 中出现了如下错误<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] mod_wsgi (pid=<span class="number">4017</span>): Target WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span> cannot be loaded <span class="keyword">as</span> Python module.</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] mod_wsgi (pid=<span class="number">4017</span>): Exception occurred processing WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span>.</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] Traceback (most recent call last):</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>]   File <span class="string">"/var/www/html/attence/wsgi.py"</span>, line <span class="number">23</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>]     <span class="keyword">from</span> django.core.wsgi <span class="keyword">import</span> get_wsgi_application</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] ImportError: No module named django.core.wsgi</div></pre></td></tr></table></figure></p>
+<p>口中的水差点吐在屏幕上。。。怎么django没有了。。。我突然间意识到我重装了python。。。然后开始了重装各种依赖的漫漫长路。(<strong>装完一个后，重启apache，根据错误提示No module named XXX，找对应依赖的下载地址即可</strong>)。</p>
+<p>2.6. 安装完django的依赖后，error_log出现了一个诡异的错误<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>] mod_wsgi (pid=<span class="number">880</span>): Target WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span> cannot be loaded <span class="keyword">as</span> Python module.</div><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>] mod_wsgi (pid=<span class="number">880</span>): Exception occurred processing WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span>.</div><div class="line">//.... 省略掉中间很多错误日志</div><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>]     __import__(name)</div><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>] ImportError: No module named attence.settings</div></pre></td></tr></table></figure></p>
+<p>attence.settings是我的DJANGO_SETTINGS_MODULE，如果说找不到这个module，那么就说明整个路径配置有问题了。在这个地方我想了很久，也查了很多资料，都没什么结果。有时间就是会有灵光一现，我突然间意识到如果我手动跑/var/www/html/attence/wsgi.py这个文件会怎么样(因为我相信apache也是去运行这个文件的)。果然，也提示相同的错误，哈哈，那就方便多了呀，打开wsgi.py文件, 中间的一行代码引起了我的注意:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">root = os.path.dirname(__file__)) </div><div class="line">sys.path.insert(<span class="number">0</span>, os.path.join(root,<span class="string">'site-packages'</span>))</div></pre></td></tr></table></figure></p>
+<p>很诡异的代码，我猜想可能以前的人是把工程文件放在python lib 的 site-packages下的吧。将此段代码稍作修改<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">root = os.path.dirname(os.path.realpath(__file__))</div><div class="line">sys.path.append(root)</div></pre></td></tr></table></figure></p>
+<p>此时，再运行wsgi文件，没有再提示错误，重启apache，不再提示这个错误，而是提示其他的依赖ImportError， 如 ImportError: No module named tablib，然后又开始了装依赖的漫漫长路。</p>
+<p>2.7. 终于，重启apache, wget ${URL} 不再报错了，说明终于配完了，我欣喜若狂。打开浏览器，输入URL，然后页面提示： 无法访问此网站。我的心又碎了了。。。这又是为啥呢，后来发现是防火墙启动了，只开放了8080端口。。。然后我就把果断把防火墙关掉, <strong>service iptables stop</strong>。</p>
+<p>2.8. 终于的终于，我在浏览器上看到了我想要的页面。我的眼泪也终于流下来了。。。。</p>
+<p>三. 总结:<br>整个过程花了我挺久时间的，有自己不小心走的弯路，也有学习到自己不知道的技术。<br>3.1. centos下的apache叫httpd, 其他一样<br>3.2. WSGI相关的知识点需要再重新学习一下，其中很多地方有点印象，但又不确定，导致查询资料花费挺长时间的<br>3.3. django作为python最火热之一的web框架，应该能够熟练应用。<br>3.4. 内网正常，外网无法访问的情况下，一般看一下防火墙或者nginx的配置<br>3.5. 熟悉linux下的源码安装方式，包括C程序的make以及python的setup<br>3.6. 还有其他linux下的一些快捷方式，如通过CTRL+R来查找历史命令，很简单，但很实用，能够极大加快调查问题的速度。</p>
+<p>有些问题事后想来还是很简单的，但当时的确困扰了我好久。但总的来说，花的时间非常值得。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/django/" rel="tag"># django</a>
+          
+            <a href="/tags/centos/" rel="tag"># centos</a>
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/03/如何用C写python库/" rel="next" title="如何用C写python库">
+                <i class="fa fa-chevron-left"></i> 如何用C写python库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="kwdfmzhu" />
+          <p class="site-author-name" itemprop="name">kwdfmzhu</p>
+           
+              <p class="site-description motion-element" itemprop="description">The World is Full of Shit</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">Tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kwdfmzhu</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://kwdfmzhu.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/10/16/记一次django部署时遇到的问题总结/';
+          this.page.identifier = '2017/10/16/记一次django部署时遇到的问题总结/';
+          this.page.title = '记一次django部署时遇到的问题总结';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://kwdfmzhu.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-06-03T11:51:49.000Z</updated>
+  <updated>2017-10-16T11:02:10.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>记一次django部署时遇到的问题总结</title>
+    <link href="http://yoursite.com/2017/10/16/%E8%AE%B0%E4%B8%80%E6%AC%A1django%E9%83%A8%E7%BD%B2%E6%97%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"/>
+    <id>http://yoursite.com/2017/10/16/记一次django部署时遇到的问题总结/</id>
+    <published>2017-10-16T08:52:18.000Z</published>
+    <updated>2017-10-16T11:02:10.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>一. 大概情况<br>就是说有一个django服务需要部署到centos的apache上去。但是呢该centos内核版本较低，自带的python版本较低。需要自己编译一个python2.7的版本替换掉系统的。然后就开展了一场与各种配置的艰苦斗争。。。</p>
+<p>篇幅短长，大家就当作看一个故事吧。重点的呢会加黑一下，同时也写在结论处的。</p>
+<p>二. 斗争过程<br>2.1. 刚拿到这个任务时，我登陆centos找apache服务。但是居然没有找到/etc/apache2(以前接触的机器都是ubuntu和debian, 没有接触过redhat和centos)，我困惑了。。。然后查了一下才知道centos上的httpd就是apache，也就是<strong>/etc/httpd就是我要找的apache目录</strong>。</p>
+<p>2.2. 知道apache目录后，我首先试着跑了一下django，采用本地启动的方式，验证采用wget ${URL}的方式，发现程序是OK的。那么就可以部署到apache上去了。apache中的conf/httpd.conf中已经有了对应的wsgi配置(已有前人的肩膀可以踩了，很happy)，看了一下<strong>WSGIScriptAlias</strong> 配置路径，没有问题。那么我就尝试启动了apache，启动方式为 service httpd restart。但此时查看apache的error_log，现在<strong>提示找不到site.py错误</strong>。</p>
+<p>2.3. 查找相关的资料，我怀疑可能是mod_wsgi版本过低导致的。通过ldd modules/mod_wsgi.so 看到<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"> linux-vdso.so.1 =&gt;  (0x00007ffff3300000)</div><div class="line"> libpython2.6.so.1.0 =&gt; /usr/lib64/libpython2.6.so.1.0 (0x00007f48fb4e6000)</div><div class="line"> libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007f48fb2c9000)</div><div class="line"> libdl.so.2 =&gt; /lib64/libdl.so.2 (0x00007f48fb0c4000)</div><div class="line"> libutil.so.1 =&gt; /lib64/libutil.so.1 (0x00007f48faec1000)</div><div class="line"> libm.so.6 =&gt; /lib64/libm.so.6 (0x00007f48fac3d000)</div><div class="line"> libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f48fa8a8000)</div><div class="line"> /lib64/ld-linux-x86-64.so.2 (0x00007f48fbab9000)</div><div class="line">``` </div><div class="line">其中很明显libpython是2.6版本的，和我自装的2.7版本对不上。此时有两种方式</div><div class="line">  1. 修改link so文件，也就是把/usr/lib64/libpython2.6.so.1.0 做成一个软连接，link到python2.7.so上</div><div class="line">  2. 重现编译mod_wsgi</div><div class="line">考虑到尽量少走歪路，采用比较保险的第2中方案。</div><div class="line"></div><div class="line">2.4. 下载mod_wsgi源码，开始编译。然后就很顺利的报错了，出错如下</div><div class="line">```bash</div><div class="line">/usr/bin/ld: /usr/<span class="built_in">local</span>/lib/libpython2.7.a(abstract.o): relocation R_X86_64_32 against `.rodata.str1.8‘ can not be used when making a shared object; recompile with -fPIC</div><div class="line">/usr/<span class="built_in">local</span>/lib/libpython2.7.a: could not <span class="built_in">read</span> symbols: Bad value</div><div class="line">collect2: ld returned 1 <span class="built_in">exit</span> status</div><div class="line">apxs:Error: Command failed with rc=65536</div></pre></td></tr></table></figure></p>
+<p>提示还是比较明显的，程序在做link libpython2.7.a 的时候找到的是静态库(.a)不是动态库(.so)，当时看到这个错误时感觉崩溃了，这说明需要重新编译python程序啊。。。蹲墙角哭了一会，回来默默的把python删掉，重新下载python源码，<strong>./configure时带上–enable-shared; make; make install。后再编译mod_wsgi</strong> 就可以了。替换掉modules/mod_wsgi.so。</p>
+<p>PS: <em>关于mod_wsgi，有兴趣可以看一下: <a href="http://modwsgi.readthedocs.io/en/develop/" target="_blank" rel="external">http://modwsgi.readthedocs.io/en/develop/</a></em></p>
+<p>2.5. 安装完mod_wsgi，先喝口水缓一缓，因为我相信apache的环境应该是不会有问题了，我只要service httpd restart就ok了。果然，现实给我了一记响亮的耳光，error_log 中出现了如下错误<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] mod_wsgi (pid=<span class="number">4017</span>): Target WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span> cannot be loaded <span class="keyword">as</span> Python module.</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] mod_wsgi (pid=<span class="number">4017</span>): Exception occurred processing WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span>.</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] Traceback (most recent call last):</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>]   File <span class="string">"/var/www/html/attence/wsgi.py"</span>, line <span class="number">23</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>]     <span class="keyword">from</span> django.core.wsgi <span class="keyword">import</span> get_wsgi_application</div><div class="line">[Fri Oct <span class="number">13</span> <span class="number">13</span>:<span class="number">49</span>:<span class="number">42</span> <span class="number">2017</span>] [error] [client <span class="number">192.168</span><span class="number">.5</span><span class="number">.102</span>] ImportError: No module named django.core.wsgi</div></pre></td></tr></table></figure></p>
+<p>口中的水差点吐在屏幕上。。。怎么django没有了。。。我突然间意识到我重装了python。。。然后开始了重装各种依赖的漫漫长路。(<strong>装完一个后，重启apache，根据错误提示No module named XXX，找对应依赖的下载地址即可</strong>)。</p>
+<p>2.6. 安装完django的依赖后，error_log出现了一个诡异的错误<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>] mod_wsgi (pid=<span class="number">880</span>): Target WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span> cannot be loaded <span class="keyword">as</span> Python module.</div><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>] mod_wsgi (pid=<span class="number">880</span>): Exception occurred processing WSGI script <span class="string">'/var/www/html/attence/wsgi.py'</span>.</div><div class="line">//.... 省略掉中间很多错误日志</div><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>]     __import__(name)</div><div class="line">[Sun Oct <span class="number">15</span> <span class="number">19</span>:<span class="number">11</span>:<span class="number">02</span> <span class="number">2017</span>] [error] [client <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>] ImportError: No module named attence.settings</div></pre></td></tr></table></figure></p>
+<p>attence.settings是我的DJANGO_SETTINGS_MODULE，如果说找不到这个module，那么就说明整个路径配置有问题了。在这个地方我想了很久，也查了很多资料，都没什么结果。有时间就是会有灵光一现，我突然间意识到如果我手动跑/var/www/html/attence/wsgi.py这个文件会怎么样(因为我相信apache也是去运行这个文件的)。果然，也提示相同的错误，哈哈，那就方便多了呀，打开wsgi.py文件, 中间的一行代码引起了我的注意:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">root = os.path.dirname(__file__)) </div><div class="line">sys.path.insert(<span class="number">0</span>, os.path.join(root,<span class="string">'site-packages'</span>))</div></pre></td></tr></table></figure></p>
+<p>很诡异的代码，我猜想可能以前的人是把工程文件放在python lib 的 site-packages下的吧。将此段代码稍作修改<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">root = os.path.dirname(os.path.realpath(__file__))</div><div class="line">sys.path.append(root)</div></pre></td></tr></table></figure></p>
+<p>此时，再运行wsgi文件，没有再提示错误，重启apache，不再提示这个错误，而是提示其他的依赖ImportError， 如 ImportError: No module named tablib，然后又开始了装依赖的漫漫长路。</p>
+<p>2.7. 终于，重启apache, wget ${URL} 不再报错了，说明终于配完了，我欣喜若狂。打开浏览器，输入URL，然后页面提示： 无法访问此网站。我的心又碎了了。。。这又是为啥呢，后来发现是防火墙启动了，只开放了8080端口。。。然后我就把果断把防火墙关掉, <strong>service iptables stop</strong>。</p>
+<p>2.8. 终于的终于，我在浏览器上看到了我想要的页面。我的眼泪也终于流下来了。。。。</p>
+<p>三. 总结:<br>整个过程花了我挺久时间的，有自己不小心走的弯路，也有学习到自己不知道的技术。<br>3.1. centos下的apache叫httpd, 其他一样<br>3.2. WSGI相关的知识点需要再重新学习一下，其中很多地方有点印象，但又不确定，导致查询资料花费挺长时间的<br>3.3. django作为python最火热之一的web框架，应该能够熟练应用。<br>3.4. 内网正常，外网无法访问的情况下，一般看一下防火墙或者nginx的配置<br>3.5. 熟悉linux下的源码安装方式，包括C程序的make以及python的setup<br>3.6. 还有其他linux下的一些快捷方式，如通过CTRL+R来查找历史命令，很简单，但很实用，能够极大加快调查问题的速度。</p>
+<p>有些问题事后想来还是很简单的，但当时的确困扰了我好久。但总的来说，花的时间非常值得。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一. 大概情况&lt;br&gt;就是说有一个django服务需要部署到centos的apache上去。但是呢该centos内核版本较低，自带的python版本较低。需要自己编译一个python2.7的版本替换掉系统的。然后就开展了一场与各种配置的艰苦斗争。。。&lt;/p&gt;
+&lt;p&gt;篇幅短长
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="django" scheme="http://yoursite.com/tags/django/"/>
+    
+      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>如何用C写python库</title>
@@ -218,44 +262,11 @@
     </summary>
     
     
-      <category term="python" scheme="http://yoursite.com/tags/python/"/>
-    
       <category term="blog" scheme="http://yoursite.com/tags/blog/"/>
     
       <category term="pelican" scheme="http://yoursite.com/tags/pelican/"/>
     
-  </entry>
-  
-  <entry>
-    <title>杭州违章处理吐槽</title>
-    <link href="http://yoursite.com/2016/03/15/hangzhouweizhang/"/>
-    <id>http://yoursite.com/2016/03/15/hangzhouweizhang/</id>
-    <published>2016-03-15T08:52:18.000Z</published>
-    <updated>2017-06-03T11:52:51.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>买车一年半，行驶1万5公里，不算多，平时开得也比较小心，但还是吃了三张罚单，其中在火车东站就被double kill了。这几天去处理了一下，过程曲折，不得不吐槽一下</p>
-<ol>
-<li>滨江周日处理点只有一处（鉴于党国国情，已是喜出望外），但不能当场交钱，需要自己去银行或者支付宝支付。</li>
-<li>支付宝支付只能根据违章号一个个处理，重复操作太多。</li>
-<li>在火车东站的两张罚单只能到<big>绍兴路64号（杭州铁路公安局交警支队机动大队）</big>，全杭州只此一家，且只有工作日上班。</li>
-<li>铁路交警只能现场交现金，不支持刷卡和支付宝。或者可自己去<big>环城东路2号 中国工商银行(杭州城站广场支行)</big>，全杭州又只此一家，两者距离4公里<br><br><br><img src="http://ww4.sinaimg.cn/large/73e6e6e1gw1f1xq3trq5xj20dd0hbaft.jpg" alt="screenshot.jpg"><br><br></li>
-<li>违章人多处理人少自不必说了，排队半个小是以上是妥妥的。</li>
-</ol>
-<p>回来查了一下，如果在机场违章就必须要去机场处理！！！！ 所以切记开车一定要遵守教规！！！</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;买车一年半，行驶1万5公里，不算多，平时开得也比较小心，但还是吃了三张罚单，其中在火车东站就被double kill了。这几天去处理了一下，过程曲折，不得不吐槽一下&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;滨江周日处理点只有一处（鉴于党国国情，已是喜出望外），但不能当场交钱，需要自己去银
-    
-    </summary>
-    
-    
-      <category term="life" scheme="http://yoursite.com/tags/life/"/>
-    
-      <category term="hangzhou" scheme="http://yoursite.com/tags/hangzhou/"/>
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
     
   </entry>
   
