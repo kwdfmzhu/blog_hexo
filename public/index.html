@@ -271,6 +271,442 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/25/spring配置动态数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kwdfmzhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kwdfmzhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/25/spring配置动态数据源/" itemprop="url">spring配置动态数据源</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-25T20:24:00+08:00">
+                2017-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/25/spring配置动态数据源/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/25/spring配置动态数据源/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>运用spring的AbstractRoutingDataSource接口，实现determineCurrentLookupKey方法。</p>
+<h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><ol>
+<li>配置多数据源</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource1"</span> <span class="attr">class</span>=<span class="string">"org.apache.tomcat.jdbc.pool.DataSource"</span> <span class="attr">destroy-method</span>=<span class="string">"close"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driverClassName"</span> <span class="attr">value</span>=<span class="string">"com.mysql.jdbc.Driver"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;url&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"$&#123;username&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"$&#123;password&#125;"</span> /&gt;</span></div><div class="line">	...</div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource2"</span> <span class="attr">class</span>=<span class="string">"org.apache.tomcat.jdbc.pool.DataSource"</span> <span class="attr">destroy-method</span>=<span class="string">"close"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driverClassName"</span> <span class="attr">value</span>=<span class="string">"com.mysql.jdbc.Driver"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;url&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"$&#123;username&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"$&#123;password&#125;"</span> /&gt;</span></div><div class="line">	...</div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource"</span> <span class="attr">class</span>=<span class="string">"com.xx.xx.xx.DynamicDataSource"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"targetDataSources"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">map</span> <span class="attr">key-type</span>=<span class="string">"java.lang.String"</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"dataSource1"</span> <span class="attr">value-ref</span>=<span class="string">"dataSource1"</span>/&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"dataSource2"</span> <span class="attr">value-ref</span>=<span class="string">"dataSource2"</span>/&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">map</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultTargetDataSource"</span> <span class="attr">ref</span>=<span class="string">"dataSource1"</span>/&gt;</span> <span class="comment">&lt;!-- 默认使用数据源 --&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>其中真正使用的数据源为dataSource，设置key-value来切换dataSource1和dataSource2</p>
+<ol>
+<li>实现DynamicDataSource类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XADynamicDataSource</span> <span class="keyword">extends</span> <span class="title">AbstractRoutingDataSource</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">determineCurrentLookupKey</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">""</span>;<span class="comment">//return dataSource1/dataSource2</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>determineCurrentLookupKey的返回值就是上述xml配置中的key，做到切换数据源</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ol>
+<li>读写分离</li>
+<li>不同类型数据源(如XA和普通数据源)切换 </li>
+<li>等等…</li>
+</ol>
+<h2 id="后语"><a href="#后语" class="headerlink" title="后语"></a>后语</h2><p>这里只是提供一种比较简单的数据源切换实现过程，至于外部如何实现，有很多种方法如: 增加注解，通过SQL方法区分等等都可以。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/freeswitch 配置连接sip服务器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kwdfmzhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kwdfmzhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/21/freeswitch 配置连接sip服务器/" itemprop="url">freeswitch 配置连接sip服务器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-21T14:19:00+08:00">
+                2017-12-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/21/freeswitch 配置连接sip服务器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/21/freeswitch 配置连接sip服务器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ol>
+<li>部署freeswitch(以下简称fs), 实现软交换电话互通</li>
+<li>配置fs连接sip服务器，实现外部电话连通</li>
+<li>通过sipjs的webRTC实现浏览器拨打外部电话</li>
+</ol>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><h3 id="安装fs"><a href="#安装fs" class="headerlink" title="安装fs"></a>安装fs</h3><p>在mac上有两种方式：</p>
+<ol>
+<li>直接brew install freeswitch</li>
+<li>源码安装，<a href="https://freeswitch.org/confluence/display/FREESWITCH/Installation" target="_blank" rel="external">官网地址</a>，下载源码后根据README提示安装即可(中途make时会需要安装很多依赖)<br>快速推荐使用方式1.</li>
+</ol>
+<p>PS: centos6.5安装时用fs1.4版本(用1.6会提示依赖版本不够)</p>
+<h3 id="启动fs"><a href="#启动fs" class="headerlink" title="启动fs"></a>启动fs</h3><p>命令行中输入freeswitch，待输出一堆信息后，出现蓝色背景的提示既是成功.</p>
+<h3 id="安装配置软交换电话软件"><a href="#安装配置软交换电话软件" class="headerlink" title="安装配置软交换电话软件"></a>安装配置软交换电话软件</h3><p>Mac OS上安装X-Lite，ios上安装Zoiper，在软交换中配置对应分机号(fs默认开放了1000至1019的分机号使用，初始密码是1234)<br>下图是X-Lite的配置，Zoiper同理<br><img src="http://192.168.5.101:12580/usr/uploads/2017/12/1671569006.jpg" alt="1.jpg"></p>
+<h3 id="拨打电话"><a href="#拨打电话" class="headerlink" title="拨打电话"></a>拨打电话</h3><p>直接打开X-Lite拨打其他已经设置的分机号即可</p>
+<h2 id="到此目标1步骤完成"><a href="#到此目标1步骤完成" class="headerlink" title="到此目标1步骤完成"></a><strong>到此目标1步骤完成</strong></h2><h3 id="fs配置sip服务器"><a href="#fs配置sip服务器" class="headerlink" title="fs配置sip服务器"></a>fs配置sip服务器</h3><p>前提: 已经有现成的sip服务器已经对应的账号</p>
+<ol>
+<li><p>在fs的etc/freeswitch/sip_profiles/external路径下，新建文件名为sipprovider.xml, 内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">  <span class="tag">&lt;<span class="name">include</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">gateway</span> <span class="attr">name</span>=<span class="string">"sipprovider"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"8009"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"123456"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"realm"</span> <span class="attr">value</span>=<span class="string">"192.168.5.201"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"proxy"</span> <span class="attr">value</span>=<span class="string">"192.168.5.201"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"register"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"expire-seconds"</span> <span class="attr">value</span>=<span class="string">"600"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"ping"</span> <span class="attr">value</span>=<span class="string">"30"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"sip-trace"</span> <span class="attr">value</span>=<span class="string">"true"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">gateway</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">include</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>重启fs或者在fs_cli中输入“sofia profile external restart”, 看到终端如下就是生效</p>
+</li>
+</ol>
+<blockquote>
+<p>Added gateway ‘sipprovider’ to profile ‘external</p>
+</blockquote>
+<h3 id="fs配置sip服务到extension"><a href="#fs配置sip服务到extension" class="headerlink" title="fs配置sip服务到extension"></a>fs配置sip服务到extension</h3><ol>
+<li>etc/freeswitch/dialplan/default新建00_rout_to_sipprovier.xml(<em>用00开头是为了让fs优先读取这个配置，防止被默认配置覆盖</em>)</li>
+<li>内容如下</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">include</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">extension</span> <span class="attr">name</span>=<span class="string">"5_201 sipprovider Gateway"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">condition</span> <span class="attr">field</span>=<span class="string">"destination_number"</span><span class="attr">expression</span>=<span class="string">"^(((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d&#123;8&#125;)$"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"dialed_extension=$1"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"bridge"</span><span class="attr">data</span>=<span class="string">"sofia/gateway/sipprovider/$1"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">condition</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">extension</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">include</span>&gt;</span></div></pre></td></tr></table></figure>
+<ol>
+<li>fs_cli 输入 reloadxml重启配置</li>
+<li>如果需要增加录音功能，那么继续添加xml内容中的action标签。详见<a href="https://freeswitch.org/confluence/display/FREESWITCH/mod_dptools:+record_session" target="_blank" rel="external">这里</a></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_TITLE=Recording $&#123;destination_number&#125; $&#123;caller_id_number&#125; $&#123;strftime(%Y-%m-%d %H:%M)&#125;"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_COPYRIGHT=(c) 1980 Factory Records, Inc."</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_SOFTWARE=FreeSWITCH"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_ARTIST=Ian Curtis"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_COMMENT=Love will tear us apart"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_DATE=$&#123;strftime(%Y-%m-%d %H:%M)&#125;"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_STEREO=true"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"record_session"</span> <span class="attr">data</span>=<span class="string">"$$&#123;recordings_dir&#125;/$&#123;strftime(%Y-%m-%d-%H-%M-%S)&#125;_$&#123;destination_number&#125;_$&#123;caller_id_number&#125;.wav"</span>/&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="拨打电话-1"><a href="#拨打电话-1" class="headerlink" title="拨打电话"></a>拨打电话</h3><p>在X-Lite上输入外网电话即可，如我的手机1508860XXXX</p>
+<h2 id="到此目标2步骤完成"><a href="#到此目标2步骤完成" class="headerlink" title="到此目标2步骤完成"></a><strong>到此目标2步骤完成</strong></h2><h3 id="开启fs的websocket端口"><a href="#开启fs的websocket端口" class="headerlink" title="开启fs的websocket端口"></a>开启fs的websocket端口</h3><p>在sip_profiles/internal.xml中开启ws-binding和wss-binding<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- for sip over websocket support --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"ws-binding"</span>  <span class="attr">value</span>=<span class="string">":5066"</span>/&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- for sip over secure websocket support --&gt;</span></div><div class="line"><span class="comment">&lt;!-- You need wss.pem in $$&#123;certs_dir&#125; for wss or one will be created for you --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"wss-binding"</span> <span class="attr">value</span>=<span class="string">":7443"</span>/&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="使用SipJS实现"><a href="#使用SipJS实现" class="headerlink" title="使用SipJS实现"></a>使用SipJS实现</h3><ol>
+<li>查看sipjs<a href="https://sipjs.com/" target="_blank" rel="external">官网</a>，根据文档实现</li>
+<li>我使用demo<a href="git@192.168.5.252:zuoye/sipjs-demo.git">地址</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/20/mysql 5.7 无法插入0000-00-00 00:00:00的数据/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kwdfmzhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kwdfmzhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/20/mysql 5.7 无法插入0000-00-00 00:00:00的数据/" itemprop="url">mysql 5.7 无法插入0000-00-00 00:00:00的数据</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-20T15:20:00+08:00">
+                2017-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/20/mysql 5.7 无法插入0000-00-00 00:00:00的数据/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/10/20/mysql 5.7 无法插入0000-00-00 00:00:00的数据/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>起因:<br>  由于CRM的用户属性添加上要经过一个洗数的过程，因此online时间作为比较重要的时间戳需要保存下来。设置DEFAULT为”0000-00-00 00:00:00”。但是程序却报错<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.sql.SQLException: Cannot convert value <span class="string">'0000-00-00 00:00:00'</span> from column XX to TIMESTAMP</div></pre></td></tr></table></figure></p>
+<p>解决办法:<br>  错误提示的很明显，但是以前做过类似的数据设计，是没有问题的。故查了以下发现mysql从5.6.X开始后，不再支持类似”0000-00-00”这种数据。如果想要规避此类问题，有几个方案</p>
+<ol>
+<li>修改mysql配置文件的sql_mode，去掉 NO_ZERO_IN_DATE, NO_ZERO_DATE 两个选项。(不建议)</li>
+<li><p>在数据库链接地址后加zeroDateTimeBehavior=convertToNull， 如： jdbc:mysql://192.168.5.241:3306/acrm-usercenter?zeroDateTimeBehavior=convertToNull</p>
+<p>zeroDateTimeBehavior可设置的值有三个:</p>
+</li>
+<li>exception, 既为默认选项，就是抛出上述错误</li>
+<li>convertToNull, 转成NULL值</li>
+<li>round, 转成最近的日期”0001-01-01”</li>
+</ol>
+<p>结论:<br>  根据需求，如果是新建的表，那么此类日期default可以设置为NULL；如果是数据库升级了，考虑到程序兼容性，可加zeroDateTimeBehavior=convertToNull</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/16/记一次django部署时遇到的问题总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1340,7 +1776,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
@@ -1353,7 +1789,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">Tags</span>
               </a>
             </div>
@@ -1402,7 +1838,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

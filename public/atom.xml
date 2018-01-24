@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-10-16T11:02:10.000Z</updated>
+  <updated>2018-01-24T02:46:01.702Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,146 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>spring配置动态数据源</title>
+    <link href="http://yoursite.com/2017/12/25/spring%E9%85%8D%E7%BD%AE%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%90/"/>
+    <id>http://yoursite.com/2017/12/25/spring配置动态数据源/</id>
+    <published>2017-12-25T12:24:00.000Z</published>
+    <updated>2018-01-24T02:46:01.702Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>运用spring的AbstractRoutingDataSource接口，实现determineCurrentLookupKey方法。</p>
+<h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><ol>
+<li>配置多数据源</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource1"</span> <span class="attr">class</span>=<span class="string">"org.apache.tomcat.jdbc.pool.DataSource"</span> <span class="attr">destroy-method</span>=<span class="string">"close"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driverClassName"</span> <span class="attr">value</span>=<span class="string">"com.mysql.jdbc.Driver"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;url&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"$&#123;username&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"$&#123;password&#125;"</span> /&gt;</span></div><div class="line">	...</div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource2"</span> <span class="attr">class</span>=<span class="string">"org.apache.tomcat.jdbc.pool.DataSource"</span> <span class="attr">destroy-method</span>=<span class="string">"close"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driverClassName"</span> <span class="attr">value</span>=<span class="string">"com.mysql.jdbc.Driver"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"$&#123;url&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"$&#123;username&#125;"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"$&#123;password&#125;"</span> /&gt;</span></div><div class="line">	...</div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource"</span> <span class="attr">class</span>=<span class="string">"com.xx.xx.xx.DynamicDataSource"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"targetDataSources"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">map</span> <span class="attr">key-type</span>=<span class="string">"java.lang.String"</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"dataSource1"</span> <span class="attr">value-ref</span>=<span class="string">"dataSource1"</span>/&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"dataSource2"</span> <span class="attr">value-ref</span>=<span class="string">"dataSource2"</span>/&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">map</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultTargetDataSource"</span> <span class="attr">ref</span>=<span class="string">"dataSource1"</span>/&gt;</span> <span class="comment">&lt;!-- 默认使用数据源 --&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>其中真正使用的数据源为dataSource，设置key-value来切换dataSource1和dataSource2</p>
+<ol>
+<li>实现DynamicDataSource类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XADynamicDataSource</span> <span class="keyword">extends</span> <span class="title">AbstractRoutingDataSource</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">determineCurrentLookupKey</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">""</span>;<span class="comment">//return dataSource1/dataSource2</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>determineCurrentLookupKey的返回值就是上述xml配置中的key，做到切换数据源</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><ol>
+<li>读写分离</li>
+<li>不同类型数据源(如XA和普通数据源)切换 </li>
+<li>等等…</li>
+</ol>
+<h2 id="后语"><a href="#后语" class="headerlink" title="后语"></a>后语</h2><p>这里只是提供一种比较简单的数据源切换实现过程，至于外部如何实现，有很多种方法如: 增加注解，通过SQL方法区分等等都可以。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;基本思路&quot;&gt;&lt;a href=&quot;#基本思路&quot; class=&quot;headerlink&quot; title=&quot;基本思路&quot;&gt;&lt;/a&gt;基本思路&lt;/h2&gt;&lt;p&gt;运用spring的AbstractRoutingDataSource接口，实现determineCurrentLookupK
+    
+    </summary>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="spring" scheme="http://yoursite.com/tags/spring/"/>
+    
+      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
+    
+      <category term="数据源" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E6%BA%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>freeswitch 配置连接sip服务器</title>
+    <link href="http://yoursite.com/2017/12/21/freeswitch%20%E9%85%8D%E7%BD%AE%E8%BF%9E%E6%8E%A5sip%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    <id>http://yoursite.com/2017/12/21/freeswitch 配置连接sip服务器/</id>
+    <published>2017-12-21T06:19:00.000Z</published>
+    <updated>2018-01-24T02:46:01.699Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ol>
+<li>部署freeswitch(以下简称fs), 实现软交换电话互通</li>
+<li>配置fs连接sip服务器，实现外部电话连通</li>
+<li>通过sipjs的webRTC实现浏览器拨打外部电话</li>
+</ol>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><h3 id="安装fs"><a href="#安装fs" class="headerlink" title="安装fs"></a>安装fs</h3><p>在mac上有两种方式：</p>
+<ol>
+<li>直接brew install freeswitch</li>
+<li>源码安装，<a href="https://freeswitch.org/confluence/display/FREESWITCH/Installation" target="_blank" rel="external">官网地址</a>，下载源码后根据README提示安装即可(中途make时会需要安装很多依赖)<br>快速推荐使用方式1.</li>
+</ol>
+<p>PS: centos6.5安装时用fs1.4版本(用1.6会提示依赖版本不够)</p>
+<h3 id="启动fs"><a href="#启动fs" class="headerlink" title="启动fs"></a>启动fs</h3><p>命令行中输入freeswitch，待输出一堆信息后，出现蓝色背景的提示既是成功.</p>
+<h3 id="安装配置软交换电话软件"><a href="#安装配置软交换电话软件" class="headerlink" title="安装配置软交换电话软件"></a>安装配置软交换电话软件</h3><p>Mac OS上安装X-Lite，ios上安装Zoiper，在软交换中配置对应分机号(fs默认开放了1000至1019的分机号使用，初始密码是1234)<br>下图是X-Lite的配置，Zoiper同理<br><img src="http://192.168.5.101:12580/usr/uploads/2017/12/1671569006.jpg" alt="1.jpg"></p>
+<h3 id="拨打电话"><a href="#拨打电话" class="headerlink" title="拨打电话"></a>拨打电话</h3><p>直接打开X-Lite拨打其他已经设置的分机号即可</p>
+<h2 id="到此目标1步骤完成"><a href="#到此目标1步骤完成" class="headerlink" title="到此目标1步骤完成"></a><strong>到此目标1步骤完成</strong></h2><h3 id="fs配置sip服务器"><a href="#fs配置sip服务器" class="headerlink" title="fs配置sip服务器"></a>fs配置sip服务器</h3><p>前提: 已经有现成的sip服务器已经对应的账号</p>
+<ol>
+<li><p>在fs的etc/freeswitch/sip_profiles/external路径下，新建文件名为sipprovider.xml, 内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">  <span class="tag">&lt;<span class="name">include</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">gateway</span> <span class="attr">name</span>=<span class="string">"sipprovider"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"8009"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"123456"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"realm"</span> <span class="attr">value</span>=<span class="string">"192.168.5.201"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"proxy"</span> <span class="attr">value</span>=<span class="string">"192.168.5.201"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"register"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"expire-seconds"</span> <span class="attr">value</span>=<span class="string">"600"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"ping"</span> <span class="attr">value</span>=<span class="string">"30"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"sip-trace"</span> <span class="attr">value</span>=<span class="string">"true"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">gateway</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">include</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>重启fs或者在fs_cli中输入“sofia profile external restart”, 看到终端如下就是生效</p>
+</li>
+</ol>
+<blockquote>
+<p>Added gateway ‘sipprovider’ to profile ‘external</p>
+</blockquote>
+<h3 id="fs配置sip服务到extension"><a href="#fs配置sip服务到extension" class="headerlink" title="fs配置sip服务到extension"></a>fs配置sip服务到extension</h3><ol>
+<li>etc/freeswitch/dialplan/default新建00_rout_to_sipprovier.xml(<em>用00开头是为了让fs优先读取这个配置，防止被默认配置覆盖</em>)</li>
+<li>内容如下</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">include</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">extension</span> <span class="attr">name</span>=<span class="string">"5_201 sipprovider Gateway"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">condition</span> <span class="attr">field</span>=<span class="string">"destination_number"</span><span class="attr">expression</span>=<span class="string">"^(((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d&#123;8&#125;)$"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"dialed_extension=$1"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"bridge"</span><span class="attr">data</span>=<span class="string">"sofia/gateway/sipprovider/$1"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">condition</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">extension</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">include</span>&gt;</span></div></pre></td></tr></table></figure>
+<ol>
+<li>fs_cli 输入 reloadxml重启配置</li>
+<li>如果需要增加录音功能，那么继续添加xml内容中的action标签。详见<a href="https://freeswitch.org/confluence/display/FREESWITCH/mod_dptools:+record_session" target="_blank" rel="external">这里</a></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_TITLE=Recording $&#123;destination_number&#125; $&#123;caller_id_number&#125; $&#123;strftime(%Y-%m-%d %H:%M)&#125;"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_COPYRIGHT=(c) 1980 Factory Records, Inc."</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_SOFTWARE=FreeSWITCH"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_ARTIST=Ian Curtis"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_COMMENT=Love will tear us apart"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_DATE=$&#123;strftime(%Y-%m-%d %H:%M)&#125;"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"set"</span> <span class="attr">data</span>=<span class="string">"RECORD_STEREO=true"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">application</span>=<span class="string">"record_session"</span> <span class="attr">data</span>=<span class="string">"$$&#123;recordings_dir&#125;/$&#123;strftime(%Y-%m-%d-%H-%M-%S)&#125;_$&#123;destination_number&#125;_$&#123;caller_id_number&#125;.wav"</span>/&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="拨打电话-1"><a href="#拨打电话-1" class="headerlink" title="拨打电话"></a>拨打电话</h3><p>在X-Lite上输入外网电话即可，如我的手机1508860XXXX</p>
+<h2 id="到此目标2步骤完成"><a href="#到此目标2步骤完成" class="headerlink" title="到此目标2步骤完成"></a><strong>到此目标2步骤完成</strong></h2><h3 id="开启fs的websocket端口"><a href="#开启fs的websocket端口" class="headerlink" title="开启fs的websocket端口"></a>开启fs的websocket端口</h3><p>在sip_profiles/internal.xml中开启ws-binding和wss-binding<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- for sip over websocket support --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"ws-binding"</span>  <span class="attr">value</span>=<span class="string">":5066"</span>/&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- for sip over secure websocket support --&gt;</span></div><div class="line"><span class="comment">&lt;!-- You need wss.pem in $$&#123;certs_dir&#125; for wss or one will be created for you --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"wss-binding"</span> <span class="attr">value</span>=<span class="string">":7443"</span>/&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="使用SipJS实现"><a href="#使用SipJS实现" class="headerlink" title="使用SipJS实现"></a>使用SipJS实现</h3><ol>
+<li>查看sipjs<a href="https://sipjs.com/" target="_blank" rel="external">官网</a>，根据文档实现</li>
+<li>我使用demo<a href="git@192.168.5.252:zuoye/sipjs-demo.git">地址</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;目标&quot;&gt;&lt;a href=&quot;#目标&quot; class=&quot;headerlink&quot; title=&quot;目标&quot;&gt;&lt;/a&gt;目标&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;部署freeswitch(以下简称fs), 实现软交换电话互通&lt;/li&gt;
+&lt;li&gt;配置fs连接sip服务器，实现外部电话连通&lt;/
+    
+    </summary>
+    
+    
+      <category term="freeswitch" scheme="http://yoursite.com/tags/freeswitch/"/>
+    
+      <category term="sip" scheme="http://yoursite.com/tags/sip/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql 5.7 无法插入0000-00-00 00:00:00的数据</title>
+    <link href="http://yoursite.com/2017/10/20/mysql%205.7%20%E6%97%A0%E6%B3%95%E6%8F%92%E5%85%A50000-00-00%2000:00:00%E7%9A%84%E6%95%B0%E6%8D%AE/"/>
+    <id>http://yoursite.com/2017/10/20/mysql 5.7 无法插入0000-00-00 00:00:00的数据/</id>
+    <published>2017-10-20T07:20:00.000Z</published>
+    <updated>2018-01-24T02:46:01.700Z</updated>
+    
+    <content type="html"><![CDATA[<p>起因:<br>  由于CRM的用户属性添加上要经过一个洗数的过程，因此online时间作为比较重要的时间戳需要保存下来。设置DEFAULT为”0000-00-00 00:00:00”。但是程序却报错<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.sql.SQLException: Cannot convert value <span class="string">'0000-00-00 00:00:00'</span> from column XX to TIMESTAMP</div></pre></td></tr></table></figure></p>
+<p>解决办法:<br>  错误提示的很明显，但是以前做过类似的数据设计，是没有问题的。故查了以下发现mysql从5.6.X开始后，不再支持类似”0000-00-00”这种数据。如果想要规避此类问题，有几个方案</p>
+<ol>
+<li>修改mysql配置文件的sql_mode，去掉 NO_ZERO_IN_DATE, NO_ZERO_DATE 两个选项。(不建议)</li>
+<li><p>在数据库链接地址后加zeroDateTimeBehavior=convertToNull， 如： jdbc:mysql://192.168.5.241:3306/acrm-usercenter?zeroDateTimeBehavior=convertToNull</p>
+<p>zeroDateTimeBehavior可设置的值有三个:</p>
+</li>
+<li>exception, 既为默认选项，就是抛出上述错误</li>
+<li>convertToNull, 转成NULL值</li>
+<li>round, 转成最近的日期”0001-01-01”</li>
+</ol>
+<p>结论:<br>  根据需求，如果是新建的表，那么此类日期default可以设置为NULL；如果是数据库升级了，考虑到程序兼容性，可加zeroDateTimeBehavior=convertToNull</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;起因:&lt;br&gt;  由于CRM的用户属性添加上要经过一个洗数的过程，因此online时间作为比较重要的时间戳需要保存下来。设置DEFAULT为”0000-00-00 00:00:00”。但是程序却报错&lt;br&gt;&lt;figure class=&quot;highlight java&quot;&gt;&lt;ta
+    
+    </summary>
+    
+    
+      <category term="msyql" scheme="http://yoursite.com/tags/msyql/"/>
+    
+  </entry>
   
   <entry>
     <title>记一次django部署时遇到的问题总结</title>
@@ -93,178 +233,6 @@
     
     </summary>
     
-    
-      <category term="python" scheme="http://yoursite.com/tags/python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mybatis 动态传入表名进行sql查询</title>
-    <link href="http://yoursite.com/2017/05/13/Mybatis%20%E5%8A%A8%E6%80%81%E4%BC%A0%E5%85%A5%E8%A1%A8%E5%90%8D%E8%BF%9B%E8%A1%8Csql%E6%9F%A5%E8%AF%A2/"/>
-    <id>http://yoursite.com/2017/05/13/Mybatis 动态传入表名进行sql查询/</id>
-    <published>2017-05-13T08:52:18.000Z</published>
-    <updated>2017-06-03T11:53:27.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>网上也有相关的方法，基本都为</p>
-<ol>
-<li>添加属性statementType=”STATEMENT”</li>
-<li>用${}代替#{}。如此一来就会有sql注入的危险。</li>
-</ol>
-<p>今天自己尝试了一种新的方法，如下:</p>
-<h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>利用org.apache.ibatis.annotations.Param的注解，在xml中判断传入的参数:表名用${},值用#{}。</p>
-<h4 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h4><ul>
-<li>定义一个mapper</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TestMapper</span></span>&#123;</div><div class="line">    <span class="comment">//统计userId的对应的数据总数</span></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">countByUserId</span><span class="params">(@Param(<span class="string">"tableName"</span>)</span> String tableName, @<span class="title">Param</span><span class="params">(<span class="string">"userId"</span>)</span> Integer userId)</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>定义xml</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"TestMapper对应路径"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"countByUserId"</span> <span class="attr">parameterType</span>=<span class="string">"hashmap"</span> <span class="attr">resultType</span>=<span class="string">"java.lang.Integer"</span>&gt;</span></div><div class="line">        SELECT</div><div class="line">        COUNT(1)</div><div class="line">        FROM</div><div class="line">        $&#123;tableName&#125;</div><div class="line">        WHERE</div><div class="line">        userId = #&#123;userId&#125;</div><div class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>如此配置，即可以实现表名的动态传入，又可以防止sql注入的危险。传入库名或者字段名同理可得。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;网上也有相关的方法，基本都为&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;添加属性statementType=”STATEMENT”&lt;/li&gt;
-&lt;li&gt;用${}代替#{}。如此一来就会有sql注入的危险。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;今天自己尝试了一种新的方法，如下:&lt;/p&gt;
-&lt;h4 id=
-    
-    </summary>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="mybatis" scheme="http://yoursite.com/tags/mybatis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java native关键字</title>
-    <link href="http://yoursite.com/2016/07/03/Java_native/"/>
-    <id>http://yoursite.com/2016/07/03/Java_native/</id>
-    <published>2016-07-03T08:52:18.000Z</published>
-    <updated>2017-06-03T11:53:11.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Java的Object类中的函数定义如hasCode()函数如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hasCode</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure></p>
-<p>看了之后觉得很奇怪，为什么会有native呢?今天稍微来了解一下</p>
-<h2 id="什么是native"><a href="#什么是native" class="headerlink" title="什么是native"></a>什么是native</h2><p>native就是本地的意思，Java中native是一个关键字，用来修饰函数定义，表明该函数是由非Java写的。(类似C++调用C的extern C告知编译器去调用一个C函数)</p>
-<blockquote>
-<p>“A native method is a Java method whose implementation is provided by non-java code.”</p>
-</blockquote>
-<p>定义一个native函数时，并不提供实现题(有点类似于Java的Interface定义)，原因就是函数的具体实现是由非Java语言在外面实现的。下面给出一些native函数的定义示例:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IHaveNatives</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Native1</span><span class="params">(<span class="keyword">int</span> x)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">static</span> <span class="keyword">public</span> <span class="keyword">long</span> <span class="title">Native2</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">synchronized</span> <span class="keyword">private</span> <span class="keyword">float</span> <span class="title">Native3</span><span class="params">(Object o)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">native</span> <span class="keyword">void</span> <span class="title">Native4</span><span class="params">(<span class="keyword">int</span>[] ary)</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>很显然，native可以修饰几乎所有类型的函数以及返回所有类型的返回值，当然很明显的一点就是不能修饰abstract类型的函数，原因也很明显:native表示该函数有外部的具体实现，而abstract表示该函数没有具体的实现。这里说明一点，如果带native的函数被继承后可以用java重写(带final的不能被重写)。</p>
-<h2 id="为什么要有native"><a href="#为什么要有native" class="headerlink" title="为什么要有native"></a>为什么要有native</h2><ol>
-<li>与java环境外交互：<br>有时java应用需要与java外面的环境交互。这是本地方法存在的主要原因，你可以想想java需要与一些底层系统如操作系统或某些硬件交换信息时的情况。本地方法正是这样一种交流机制：它为我们提供了一个非常简洁的接口，而且我们无需去了解java应用之外的繁琐的细节。</li>
-<li>与操作系统交互：<br>JVM支持着java语言本身和运行时库，它是java程序赖以生存的平台，它由一个解释器（解释字节码）和一些连接到本地代码的库组成。然而不管怎样，它毕竟不是一个完整的系统，它经常依赖于一些底层（underneath在下面的）系统的支持。这些底层系统常常是强大的操作系统。通过使用本地方法，我们得以用java实现了jre的与底层系统的交互，甚至JVM的一些部分就是用C写的，还有，如果我们要使用一些java语言本身没有提供封装的操作系统的特性时，我们也需要使用本地方法。</li>
-<li>Sun’s Java：<br>Sun的解释器是用C实现的，这使得它能像一些普通的C一样与外部交互。jre大部分是用java实现的，它也通过一些本地方法与外界交互。例如：类java.lang.Thread 的 setPriority()方法是用java实现的，但是它实现调用的是该类里的本地方法setPriority0()。这个本地方法是用C实现的，并被植入JVM内部，在Windows95的平台上，这个本地方法最终将调用Win32 SetPriority() API。这是一个本地方法的具体实现由JVM直接提供，更多的情况是本地方法由外部的动态链接库（external dynamic link library）提供，然后被JVM调用。</li>
-</ol>
-<h2 id="怎么样使用native"><a href="#怎么样使用native" class="headerlink" title="怎么样使用native"></a>怎么样使用native</h2><ol>
-<li><p>首先创建一个native的类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloNative</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span></div><div class="line">    &#123;</div><div class="line">        System.loadLibrary(<span class="string">"HelloNative"</span>);</div><div class="line">    &#125;</div><div class="line">     </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span></span>;</div><div class="line">     </div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"static-access"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">new</span> HelloNative().sayHello();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>运行生成javah，等到头文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">javac HelloNative.java</div><div class="line">javah HelloNative</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>就可以等到如下的HelloNative.h文件<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* DO NOT EDIT THIS FILE - it is machine generated */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></div><div class="line"><span class="comment">/* Header for class HelloNative */</span></div><div class="line"> </div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _Included_HelloNative</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _Included_HelloNative</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * Class:     HelloNative</div><div class="line"> * Method:    sayHello</div><div class="line"> * Signature: ()V</div><div class="line"> */</div><div class="line"><span class="function">JNIEXPORT <span class="keyword">void</span> JNICALL <span class="title">Java_HelloNative_sayHello</span></span></div><div class="line">  <span class="params">(JNIEnv *, jclass)</span>;</div><div class="line"> </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line">&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
-<ol>
-<li><p>根据头文件实现一个本地方法</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"HelloNative.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"> </div><div class="line">JNIEXPORT <span class="keyword">void</span> JNICALL Java_HelloNative_sayHello</div><div class="line">&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Hello，JNI"</span>);   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>用GCC生成库文件</p>
-</li>
-<li>运行即可<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">java HelloNative</div><div class="line"></div><div class="line">Hello，JNI</div></pre></td></tr></table></figure>
-</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;在Java的Object类中的函数定义如hasCode()函数如下:&lt;br&gt;&lt;figure class=&quot;highlight java&quot;&gt;&lt;
-    
-    </summary>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="native" scheme="http://yoursite.com/tags/native/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用pelican和github搭建个人blog</title>
-    <link href="http://yoursite.com/2016/04/13/pelican_blog/"/>
-    <id>http://yoursite.com/2016/04/13/pelican_blog/</id>
-    <published>2016-04-13T08:52:18.000Z</published>
-    <updated>2017-06-03T11:54:04.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>前几日浏览网页时无意中看到Pelican，于是心血来潮想要搭建个人博客玩玩。联想到github已经提供个人域名，一切都顺利成章。简单写点用做留念</p>
-<h3 id="1-搭建环境准备"><a href="#1-搭建环境准备" class="headerlink" title="1.搭建环境准备"></a>1.搭建环境准备</h3><p>本人属于重度Linux患者，环境为Ubuntu 14.04LTS，其他环境应该类似</p>
-<h3 id="2-涉及相关技术"><a href="#2-涉及相关技术" class="headerlink" title="2.涉及相关技术"></a>2.涉及相关技术</h3><ul>
-<li>Python2.7 及其相关</li>
-<li>Pelican</li>
-<li>Github</li>
-<li>Markdown</li>
-<li>And so on …<h4 id="2-1-Pelican"><a href="#2-1-Pelican" class="headerlink" title="2.1. Pelican"></a>2.1. Pelican</h4></li>
-<li>Pelican是一个用Python语言编写的静态网站生成器，支持使用restructuredText和Markdown写文章，配置灵活，扩展性强。同时有很多主题可以使用。</li>
-<li>Pelican的github地址:  <a href="https://github.com/getpelican/pelican" target="_blank" rel="external">https://github.com/getpelican/pelican</a></li>
-<li>Pelican 主题的github地址:  <a href="https://github.com/getpelican/pelican-themes" target="_blank" rel="external">https://github.com/getpelican/pelican-themes</a></li>
-</ul>
-<h3 id="3-使用Pelican-搭建个人静态博客"><a href="#3-使用Pelican-搭建个人静态博客" class="headerlink" title="3. 使用Pelican 搭建个人静态博客"></a>3. 使用Pelican 搭建个人静态博客</h3><h4 id="3-1-安装pelican"><a href="#3-1-安装pelican" class="headerlink" title="3.1. 安装pelican"></a>3.1. 安装pelican</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">aptitude install python-pelican</div></pre></td></tr></table></figure>
-<p>python2.7 以及相关其他依赖不做介绍</p>
-<h4 id="3-2-开始搭建"><a href="#3-2-开始搭建" class="headerlink" title="3.2. 开始搭建"></a>3.2. 开始搭建</h4><p>输入如下命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mkdir blog</div><div class="line"><span class="built_in">cd</span> blog</div><div class="line">pelican-quickstart</div></pre></td></tr></table></figure></p>
-<p>pelican-quickstart 是pelican 自带命令，根据提示一步步输入相应的配置项，不知道如何设置的接受默认即可，后续可以通过编辑pelicanconf.py文件更改配置</p>
-<p>结束后生成目录如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">blog/</div><div class="line">├── content              <span class="comment"># 存放输入的Markdown文件夹</span></div><div class="line">├── output               <span class="comment"># 生成的输出文件</span></div><div class="line">├── develop_server.sh    <span class="comment"># 开启测试服务器脚本</span></div><div class="line">├── Makefile             <span class="comment"># 管理博客的Makefile</span></div><div class="line">├── pelicanconf.py       <span class="comment"># 主配置文件</span></div><div class="line">└── publishconf.py       <span class="comment"># 主发布文件</span></div></pre></td></tr></table></figure></p>
-<p>####3.3. 写博客内容</p>
-<ul>
-<li>进入到content 目录下，用Markdown 开始编写内容。Markdown语法简单，Google即可</li>
-<li>Markdown 在线编辑器推荐使用<a href="https://maxiang.io/" target="_blank" rel="external">马克飞象</a>，个人使用不错。本地编辑器使用ReText。</li>
-<li>切记在每个文件前四行输入如下<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Title: 文章标题</div><div class="line">Date: 2013-04-18</div><div class="line">Category: 文章类别</div><div class="line">Tag: 标签1, 标签2</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>####3.4. 预览博客<br>输入以下命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">make publish</div><div class="line">make serve</div></pre></td></tr></table></figure></p>
-<p>打开浏览器，输入127.0.0.1:8000 即可看到博客</p>
-<p>####3.5. 选择主题<br><a href="https://github.com/getpelican/pelican-themes" target="_blank" rel="external">pelican-themes</a> 上有很多主题， git clone后可以使用如下命令安装任一主题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pelican-themes -i XXXXXX</div></pre></td></tr></table></figure></p>
-<p>安装完成后在pelicanconf.py文件中修改THEME 容，如安装了pelican-bootstrap3主题，那么修改THEME =”pelican-bootstrap3”，重启即可看到主题修改</p>
-<p>####3.6. 设置favicon.ico<br>favicon.ico 即Favorites Icon的缩写，其可以让浏览器除显示相应的标题外，还以图标的方式区别不同的网站。  </p>
-<ol>
-<li>选择图片，生成.ico文件(可直接使用网站生成如 <a href="http://www.bitbug.net/" target="_blank" rel="external">在线制作ico图标</a>)</li>
-<li>将图片命名成favicon.ico，放置到与Makefile同级目录</li>
-<li>修改Makefile，添加移动favicon.ico功能<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">FAVICONICO=$(BASEDIR)/favicon.ico</div><div class="line"></div><div class="line">publish: clean                                                                                                                                                                                           </div><div class="line">    $(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)</div><div class="line">    cp $(FAVICONICO) $(OUTPUTDIR)</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>####3.7. 设置评论系统<br>在<a href="https://disqus.com/admin/signup" target="_blank" rel="external">Disqus</a>上申请一个站点，记牢Shortname。 在pelicanconf.py添加<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DISQUS_SITENAME = Shortname</div></pre></td></tr></table></figure></p>
-<p>设置后可以在每个blog下出现如此评论系统<br><img src="http://ww3.sinaimg.cn/large/73e6e6e1gw1f1rj38tgbnj20po08yq3s.jpg" alt="disqus_comments"></p>
-<p>####3.8. 添加图片图床<br>前两天一直在找一个简单易用的图床，终于找到一个推荐的<a href="https://weibotuchuang.sinaapp.com/" target="_blank" rel="external">围脖是个好图床</a></p>
-<ol>
-<li>进入网站，选择对应的浏览器安装插件(本人安装了Chrome插件)</li>
-<li>安装完成后，打开插件，会出现提示对话框，将图片拖入即可生成对应的图片URL了</li>
-</ol>
-<p>####3.X. 其他功能<br>其他还有很多功能如评论系统，分析系统，站内搜索可以添加，后续会更新</p>
-<h3 id="4-使用github发布博客"><a href="#4-使用github发布博客" class="headerlink" title="4. 使用github发布博客"></a>4. 使用github发布博客</h3><p>原理: Github为每一个用户分配了一个二级域名username.github.io，用户为自己的二级域名创建主页很简单，只需要在Github下创建一个名为username.github.io的版本库，并向其master分支提交网站静态页面即可。</p>
-<ol>
-<li>登陆Github，创建一个名为username.github.io的版本库(必须如此格式)</li>
-<li>将blog/output 下的内容git到username.github.io下</li>
-<li>少等片刻，登陆<a href="http://username.github.io，会发现自己的个人博客已经生成" target="_blank" rel="external">http://username.github.io，会发现自己的个人博客已经生成</a></li>
-</ol>
-<p>如此一来，一个具有Geek风格的个人博客搭建完毕。可以出去装X了…</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;前几日浏览网页时无意中看到Pelican，于是心血来潮想要搭建个人博客玩玩。联想到github已经提供个人域名，一切都顺利成章。简单写点用做留念&lt;/p&gt;
-&lt;h3 id=&quot;1-搭建环境准备&quot;&gt;&lt;a href=&quot;#1-搭建环境准备&quot; class=&quot;headerlink&quot; tit
-    
-    </summary>
-    
-    
-      <category term="blog" scheme="http://yoursite.com/tags/blog/"/>
-    
-      <category term="pelican" scheme="http://yoursite.com/tags/pelican/"/>
     
       <category term="python" scheme="http://yoursite.com/tags/python/"/>
     
