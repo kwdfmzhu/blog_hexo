@@ -1,9 +1,9 @@
 ---
-title: @Valid使用注解
+title: Valid使用注解
 date: 2018-05-04 14:11:18
 tags: [java]
 ---
-	
+
 Controller 做表单提交时，对参数进行验证
 
 注解 | 说明

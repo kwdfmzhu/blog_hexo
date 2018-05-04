@@ -271,6 +271,207 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/Valid使用注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kwdfmzhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kwdfmzhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/04/Valid使用注解/" itemprop="url">Valid使用注解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-04T14:11:18+08:00">
+                2018-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/04/Valid使用注解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/04/Valid使用注解/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Controller 做表单提交时，对参数进行验证</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@Null</td>
+<td>限制只能为null</td>
+</tr>
+<tr>
+<td>@NotNull</td>
+<td>限制必须不为null</td>
+</tr>
+<tr>
+<td>@AssertFalse</td>
+<td>限制必须为false</td>
+</tr>
+<tr>
+<td>@AssertTrue</td>
+<td>限制必须为true</td>
+</tr>
+<tr>
+<td>@DecimalMax(value)</td>
+<td>限制必须为一个不大于指定值的数字</td>
+</tr>
+<tr>
+<td>@DecimalMin(value)</td>
+<td>限制必须为一个不小于指定值的数字</td>
+</tr>
+<tr>
+<td>@Digits(integer,fraction)</td>
+<td>限制必须为一个小数，且整数部分的位数不能超过integer，小数部分的位数不能超过fraction</td>
+</tr>
+<tr>
+<td>@Future</td>
+<td>限制必须是一个将来的日期</td>
+</tr>
+<tr>
+<td>@Max(value)</td>
+<td>限制必须为一个不大于指定值的数字</td>
+</tr>
+<tr>
+<td>@Min(value)</td>
+<td>限制必须为一个不小于指定值的数字</td>
+</tr>
+<tr>
+<td>@Past</td>
+<td>限制必须是一个过去的日期</td>
+</tr>
+<tr>
+<td>@Pattern(value)</td>
+<td>限制必须符合指定的正则表达式</td>
+</tr>
+<tr>
+<td>@Size(max,min)</td>
+<td>限制字符长度必须在min到max之间</td>
+</tr>
+<tr>
+<td>@Past</td>
+<td>验证注解的元素值（日期类型）比当前时间早</td>
+</tr>
+<tr>
+<td>@NotEmpty</td>
+<td>验证注解的元素值不为null且不为空（字符串长度不为0、集合大小不为0）</td>
+</tr>
+<tr>
+<td>@NotBlank</td>
+<td>验证注解的元素值不为空（不为null、去除首位空格后长度为0），不同于@NotEmpty，@NotBlank只应用于字符串且在比较时会去除字符串的空格</td>
+</tr>
+<tr>
+<td>@Email</td>
+<td>验证注解的元素值是Email，也可以通过正则表达式和flag指定自定义的email格式</td>
+</tr>
+</tbody>
+</table>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/25/spring配置动态数据源/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1569,171 +1770,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/02/29/protobuf_stu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kwdfmzhu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kwdfmzhu's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/02/29/protobuf_stu/" itemprop="url">protobuf 的简单介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-29T16:52:18+08:00">
-                2016-02-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/02/29/protobuf_stu/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2016/02/29/protobuf_stu/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="protobuf-是什么"><a href="#protobuf-是什么" class="headerlink" title="protobuf 是什么"></a>protobuf 是什么</h3><p>protobuf 全称 Google Protocol Buffers，是Google公司内部的混合语言数据标准。在2008年7月7号将其作为开源项目对外公布。</p>
-<p>protobuf 是一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，很适合做数据存储或 RPC 数据交换格式。它可用于通讯协议、数据存储等领域的语言无关、平台无关、可扩展的序列化结构数据格式。</p>
-<p>protobuf的<a href="https://github.com/google/protobuf" target="_blank" rel="external">源码</a>，protobuf的<a href="https://developers.google.com/protocol-buffers/docs/overview" target="_blank" rel="external">官方文档</a>， 有兴趣的同学可以深入研究一下</p>
-<h3 id="为什么要使用-protobuf"><a href="#为什么要使用-protobuf" class="headerlink" title="为什么要使用 protobuf"></a>为什么要使用 protobuf</h3><p>protobuf是一种结构化数据存储格式，类似的比较常见的有xml和json。那么和他们比较，protobuf又有什么优点？</p>
-<ul>
-<li>后台硬，有Google开发且开源，已经在Google内部久经考验 </li>
-<li>可通过解析器生成数据访问类，在编程中更容易使用</li>
-<li><p>性能好/效率高。鉴于Google对于性能的偏执，protobuf的性能自不必说。但网上相关数据已有很多，我取了这个<a href="http://www.webrube.com/json-protobuf-web_rube/5858" target="_blank" rel="external">例子</a></p>
-<blockquote>
-<p>100个logs， 序列化5000次所需时间（秒）. 越小越好</p>
-</blockquote>
-<p>| Language        | Protobuf           | Json  |<br>| ————- |:————-:| —–:|<br>| Python      | 15.13 | 0.88 |<br>| CSharp      | 0.23      |   1.80  |</p>
-<blockquote>
-<p>100个logs， 反序列化5000次所需时间（秒）. 越小越好</p>
-</blockquote>
-<p>| Language        | Protobuf           | Json  |<br>| ————- |:————-:| —–:|<br>| Python      |   8.14    |  1.40  |<br>| CSharp      | 0.47    |  4.37  |</p>
-</li>
-</ul>
-<h3 id="怎么样使用-protobuf"><a href="#怎么样使用-protobuf" class="headerlink" title="怎么样使用 protobuf"></a>怎么样使用 protobuf</h3><p>目前protobuf的官方教程支持C++，C#，Go，Java以及Python。官方自带的example也比较详细</p>
-<h4 id="查看github上的example"><a href="#查看github上的example" class="headerlink" title="查看github上的example"></a>查看github上的example</h4><ol>
-<li>首先安装protobuf， 有多种方案，我选择从github上下载源码后编译安装</li>
-<li>根据源码中的README.txt 运行./autogen.sh， 随后./configure;  make;  make install (可能会缺少一些依赖，根据提示安装即可)</li>
-<li>cd example, 根据需要的cpp java python对应的make即可看到例子。</li>
-</ol>
-<h4 id="以cpp为例子"><a href="#以cpp为例子" class="headerlink" title="以cpp为例子"></a>以cpp为例子</h4><ul>
-<li>先写一个.proto后缀的文件<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">message Person &#123;</div><div class="line">    string name = 1;</div><div class="line">    int32 id = 2; </div><div class="line">    string email = 3;</div><div class="line">&#125;</div><div class="line">``` </div><div class="line">-  使用protoc 命令生成对应的.h和.cc文件(这里的.cc即.c文件， 如其他的语言也会生成对应的文件，查看github example)</div><div class="line">``` bash</div><div class="line"> protoc --cpp_out=$DIR  $&#123;xxxx&#125;.proto</div><div class="line">``` </div><div class="line">- 编写写和读的程序</div><div class="line">序列化写入文件的代码</div><div class="line">``` cpp</div><div class="line">#include &lt;iostream&gt;                                                                                                                                                                                          </div><div class="line">#include &lt;fstream&gt;</div><div class="line">#include &lt;string&gt;</div><div class="line">#include "person.pb.h"</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">void PromptForPerson(mytest::Person* person) &#123;</div><div class="line">  cout &lt;&lt; "Enter person ID number: ";</div><div class="line">  int id; </div><div class="line">  cin &gt;&gt; id; </div><div class="line">  person-&gt;set_id(id);</div><div class="line">  cin.ignore(256, '\n');</div><div class="line"></div><div class="line">  cout &lt;&lt; "Enter name: ";</div><div class="line">  getline(cin, *person-&gt;mutable_name());</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char* argv[]) &#123;</div><div class="line">  if (argc != 2) &#123;</div><div class="line">    cerr &lt;&lt; "Usage:  " &lt;&lt; argv[0] &lt;&lt; " FILE" &lt;&lt; endl;</div><div class="line">    return -1; </div><div class="line">  &#125;</div><div class="line"></div><div class="line">  mytest::Person person;</div><div class="line"></div><div class="line">  &#123;</div><div class="line">    fstream input(argv[1], ios::in | ios::binary);</div><div class="line">    if (!input) &#123;</div><div class="line">      cout &lt;&lt; argv[1] &lt;&lt; ": File not found.  Creating a new file." &lt;&lt; endl;</div><div class="line">    &#125; else if (!person.ParseFromIstream(&amp;input)) &#123;</div><div class="line">      cerr &lt;&lt; "Failed to parse address book." &lt;&lt; endl;</div><div class="line">      return -1; </div><div class="line">    &#125;   </div><div class="line">  &#125;</div><div class="line"></div><div class="line">  PromptForPerson(&amp;person);</div><div class="line"></div><div class="line">  &#123;</div><div class="line">    fstream output(argv[1], ios::out | ios::trunc | ios::binary);</div><div class="line">    if (!person.SerializeToOstream(&amp;output)) &#123;</div><div class="line">      cerr &lt;&lt; "Failed to write address book." &lt;&lt; endl;</div><div class="line">      return -1; </div><div class="line">    &#125;   </div><div class="line">  &#125;</div><div class="line"></div><div class="line">  google::protobuf::ShutdownProtobufLibrary();</div><div class="line"></div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>反序列化读取文件的代码</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"person.pb.h"</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">ListPeople</span><span class="params">(<span class="keyword">const</span> mytest::Person&amp; person)</span> </span>&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"Person ID: "</span> &lt;&lt; person.id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"Name: "</span> &lt;&lt; person.name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (argc != <span class="number">2</span>) &#123;                                                                                                                                                                                           </div><div class="line">    <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Usage:  "</span> &lt;&lt; argv[<span class="number">0</span>] &lt;&lt; <span class="string">" ADDRESS_BOOK_FILE"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>; </div><div class="line">  &#125;</div><div class="line"></div><div class="line">  mytest::Person person;</div><div class="line"></div><div class="line">  &#123;</div><div class="line">    <span class="function">fstream <span class="title">input</span><span class="params">(argv[<span class="number">1</span>], ios::in | ios::binary)</span></span>;</div><div class="line">    <span class="keyword">if</span> (!person.ParseFromIstream(&amp;input)) &#123;</div><div class="line">      <span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to parse address book."</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">      <span class="keyword">return</span> <span class="number">-1</span>; </div><div class="line">    &#125;   </div><div class="line">  &#125;</div><div class="line"></div><div class="line">  ListPeople(person);</div><div class="line"></div><div class="line">  google::protobuf::ShutdownProtobufLibrary();</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li><p>编译程序</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">g++ add_person.cc person.pb.cc -o add_person -pthread -I/usr/<span class="built_in">local</span>/include  -pthread -L/usr/<span class="built_in">local</span>/lib -lprotobuf -lpthread</div><div class="line">g++ list_person.cc person.pb.cc -o list_person -pthread -I/usr/<span class="built_in">local</span>/include  -pthread -L/usr/<span class="built_in">local</span>/lib -lprotobuf -lpthread</div><div class="line">``` </div><div class="line">- 运行程序</div><div class="line">``` bash</div><div class="line">./add_person file_name</div><div class="line">./list_person file_name</div></pre></td></tr></table></figure>
-</li>
-<li><p>与json文件比较</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">zhu_kewei@PC0247:~/work/<span class="built_in">test</span>/protobuf/examples/mytest$ ls -l xx*</div><div class="line">-rw-rw-r-- 1 zhu_kewei zhu_kewei  7  3月  4 14:12 xx</div><div class="line">-rw-rw-r-- 1 zhu_kewei zhu_kewei 27  3月  4 14:16 xx.json</div></pre></td></tr></table></figure>
-</li>
-<li><p>可以看到用proto序列化后比json文件小</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1776,7 +1819,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">Artikel</span>
               </a>
             </div>

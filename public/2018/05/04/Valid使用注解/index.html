@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,mybatis," />
+  <meta name="keywords" content="java," />
 
 
 
@@ -95,17 +95,17 @@
 
 
 
-<meta name="description" content="网上也有相关的方法，基本都为  添加属性statementType=”STATEMENT” 用${}代替#{}。如此一来就会有sql注入的危险。  今天自己尝试了一种新的方法，如下: 基本思路利用org.apache.ibatis.annotations.Param的注解，在xml中判断传入的参数:表名用${},值用#{}。 实现过程 定义一个mapper  1234public interfac">
-<meta name="keywords" content="java,mybatis">
+<meta name="description" content="Controller 做表单提交时，对参数进行验证    注解 说明     @Null 限制只能为null   @NotNull 限制必须不为null   @AssertFalse 限制必须为false   @AssertTrue 限制必须为true   @DecimalMax(value) 限制必须为一个不大于指定值的数字   @DecimalMin(value) 限制必须为一个不小于指定值的">
+<meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mybatis 动态传入表名进行sql查询">
-<meta property="og:url" content="http://yoursite.com/2017/05/13/Mybatis 动态传入表名进行sql查询/index.html">
+<meta property="og:title" content="Valid使用注解">
+<meta property="og:url" content="http://yoursite.com/2018/05/04/Valid使用注解/index.html">
 <meta property="og:site_name" content="kwdfmzhu&#39;s blog">
-<meta property="og:description" content="网上也有相关的方法，基本都为  添加属性statementType=”STATEMENT” 用${}代替#{}。如此一来就会有sql注入的危险。  今天自己尝试了一种新的方法，如下: 基本思路利用org.apache.ibatis.annotations.Param的注解，在xml中判断传入的参数:表名用${},值用#{}。 实现过程 定义一个mapper  1234public interfac">
-<meta property="og:updated_time" content="2017-06-03T11:53:27.000Z">
+<meta property="og:description" content="Controller 做表单提交时，对参数进行验证    注解 说明     @Null 限制只能为null   @NotNull 限制必须不为null   @AssertFalse 限制必须为false   @AssertTrue 限制必须为true   @DecimalMax(value) 限制必须为一个不大于指定值的数字   @DecimalMin(value) 限制必须为一个不小于指定值的">
+<meta property="og:updated_time" content="2018-05-04T06:15:28.752Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mybatis 动态传入表名进行sql查询">
-<meta name="twitter:description" content="网上也有相关的方法，基本都为  添加属性statementType=”STATEMENT” 用${}代替#{}。如此一来就会有sql注入的危险。  今天自己尝试了一种新的方法，如下: 基本思路利用org.apache.ibatis.annotations.Param的注解，在xml中判断传入的参数:表名用${},值用#{}。 实现过程 定义一个mapper  1234public interfac">
+<meta name="twitter:title" content="Valid使用注解">
+<meta name="twitter:description" content="Controller 做表单提交时，对参数进行验证    注解 说明     @Null 限制只能为null   @NotNull 限制必须不为null   @AssertFalse 限制必须为false   @AssertTrue 限制必须为true   @DecimalMax(value) 限制必须为一个不大于指定值的数字   @DecimalMin(value) 限制必须为一个不小于指定值的">
 
 
 
@@ -133,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/13/Mybatis 动态传入表名进行sql查询/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/04/Valid使用注解/"/>
 
 
 
 
 
-  <title>Mybatis 动态传入表名进行sql查询 | kwdfmzhu's blog</title>
+  <title>Valid使用注解 | kwdfmzhu's blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-cN">
@@ -271,7 +271,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/13/Mybatis 动态传入表名进行sql查询/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/Valid使用注解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="kwdfmzhu">
@@ -288,7 +288,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Mybatis 动态传入表名进行sql查询</h1>
+          <h1 class="post-title" itemprop="name headline">Valid使用注解</h1>
         
 
         <div class="post-meta">
@@ -300,8 +300,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-13T16:52:18+08:00">
-                2017-05-13
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-04T14:11:18+08:00">
+                2018-05-04
               </time>
             
 
@@ -319,9 +319,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/05/13/Mybatis 动态传入表名进行sql查询/#comments" itemprop="discussionUrl">
+                <a href="/2018/05/04/Valid使用注解/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/05/13/Mybatis 动态传入表名进行sql查询/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/05/04/Valid使用注解/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -346,22 +346,85 @@
       
 
       
-        <p>网上也有相关的方法，基本都为</p>
-<ol>
-<li>添加属性statementType=”STATEMENT”</li>
-<li>用${}代替#{}。如此一来就会有sql注入的危险。</li>
-</ol>
-<p>今天自己尝试了一种新的方法，如下:</p>
-<h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>利用org.apache.ibatis.annotations.Param的注解，在xml中判断传入的参数:表名用${},值用#{}。</p>
-<h4 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h4><ul>
-<li>定义一个mapper</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TestMapper</span></span>&#123;</div><div class="line">    <span class="comment">//统计userId的对应的数据总数</span></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">countByUserId</span><span class="params">(@Param(<span class="string">"tableName"</span>)</span> String tableName, @<span class="title">Param</span><span class="params">(<span class="string">"userId"</span>)</span> Integer userId)</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>定义xml</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"TestMapper对应路径"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"countByUserId"</span> <span class="attr">parameterType</span>=<span class="string">"hashmap"</span> <span class="attr">resultType</span>=<span class="string">"java.lang.Integer"</span>&gt;</span></div><div class="line">        SELECT</div><div class="line">        COUNT(1)</div><div class="line">        FROM</div><div class="line">        $&#123;tableName&#125;</div><div class="line">        WHERE</div><div class="line">        userId = #&#123;userId&#125;</div><div class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>如此配置，即可以实现表名的动态传入，又可以防止sql注入的危险。传入库名或者字段名同理可得。</p>
+        <p>Controller 做表单提交时，对参数进行验证</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@Null</td>
+<td>限制只能为null</td>
+</tr>
+<tr>
+<td>@NotNull</td>
+<td>限制必须不为null</td>
+</tr>
+<tr>
+<td>@AssertFalse</td>
+<td>限制必须为false</td>
+</tr>
+<tr>
+<td>@AssertTrue</td>
+<td>限制必须为true</td>
+</tr>
+<tr>
+<td>@DecimalMax(value)</td>
+<td>限制必须为一个不大于指定值的数字</td>
+</tr>
+<tr>
+<td>@DecimalMin(value)</td>
+<td>限制必须为一个不小于指定值的数字</td>
+</tr>
+<tr>
+<td>@Digits(integer,fraction)</td>
+<td>限制必须为一个小数，且整数部分的位数不能超过integer，小数部分的位数不能超过fraction</td>
+</tr>
+<tr>
+<td>@Future</td>
+<td>限制必须是一个将来的日期</td>
+</tr>
+<tr>
+<td>@Max(value)</td>
+<td>限制必须为一个不大于指定值的数字</td>
+</tr>
+<tr>
+<td>@Min(value)</td>
+<td>限制必须为一个不小于指定值的数字</td>
+</tr>
+<tr>
+<td>@Past</td>
+<td>限制必须是一个过去的日期</td>
+</tr>
+<tr>
+<td>@Pattern(value)</td>
+<td>限制必须符合指定的正则表达式</td>
+</tr>
+<tr>
+<td>@Size(max,min)</td>
+<td>限制字符长度必须在min到max之间</td>
+</tr>
+<tr>
+<td>@Past</td>
+<td>验证注解的元素值（日期类型）比当前时间早</td>
+</tr>
+<tr>
+<td>@NotEmpty</td>
+<td>验证注解的元素值不为null且不为空（字符串长度不为0、集合大小不为0）</td>
+</tr>
+<tr>
+<td>@NotBlank</td>
+<td>验证注解的元素值不为空（不为null、去除首位空格后长度为0），不同于@NotEmpty，@NotBlank只应用于字符串且在比较时会去除字符串的空格</td>
+</tr>
+<tr>
+<td>@Email</td>
+<td>验证注解的元素值是Email，也可以通过正则表达式和flag指定自定义的email格式</td>
+</tr>
+</tbody>
+</table>
 
       
     </div>
@@ -393,8 +456,6 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
-          
         </div>
       
 
@@ -406,8 +467,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/03/Java_native/" rel="next" title="Java native关键字">
-                <i class="fa fa-chevron-left"></i> Java native关键字
+              <a href="/2017/12/25/spring配置动态数据源/" rel="next" title="spring配置动态数据源">
+                <i class="fa fa-chevron-left"></i> spring配置动态数据源
               </a>
             
           </div>
@@ -415,10 +476,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/03/如何用C写python库/" rel="prev" title="如何用C写python库">
-                如何用C写python库 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -472,17 +529,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -542,22 +590,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本思路"><span class="nav-number">1.</span> <span class="nav-text">基本思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现过程"><span class="nav-number">2.</span> <span class="nav-text">实现过程</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -695,9 +727,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/05/13/Mybatis 动态传入表名进行sql查询/';
-          this.page.identifier = '2017/05/13/Mybatis 动态传入表名进行sql查询/';
-          this.page.title = 'Mybatis 动态传入表名进行sql查询';
+          this.page.url = 'http://yoursite.com/2018/05/04/Valid使用注解/';
+          this.page.identifier = '2018/05/04/Valid使用注解/';
+          this.page.title = 'Valid使用注解';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://kwdfmzhu.disqus.com/embed.js';
